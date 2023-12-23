@@ -32,6 +32,7 @@
     "@antfu/eslint-config": "^2.4.6",
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.10.1",
+    "@vueuse/nuxt": "^10.7.0",
     "eslint": "^8.56.0",
     "gray-matter": "^4.0.3",
     "nuxt": "^3.8.2",
@@ -39,6 +40,7 @@
     "scule": "^1.1.1",
     "shadcn-nuxt": "^0.1.0",
     "vue": "^3.3.12",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "zod-to-json-schema": "^3.22.3"
   }
 }
