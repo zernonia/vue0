@@ -1,5 +1,3 @@
-import buildComponentGeneration from '../utils/multipass/buildComponentGeneration'
-
 export default defineEventHandler(async (event) => {
   await validateBody(event)
 
@@ -15,4 +13,5 @@ export default defineEventHandler(async (event) => {
   await designNewComponent(event)
   await buildComponentGeneration(event)
   await generateNewComponent(event)
+  await storeComponent(event)
 })

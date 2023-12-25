@@ -62,7 +62,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   ]
 
   const stream = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-1106',
+    model: 'gpt-4-1106-preview', // 'gpt-3.5-turbo-1106',
     messages: context,
     tools: [
       {
@@ -85,16 +85,16 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   }
 
   try {
-    const parsed = functionSchema.parse(JSON.parse(completion))
+    const parsed = JSON.parse(completion) as z.infer<typeof functionSchema>
 
     if (parsed) {
       event.node.req.componentDesignTask = {
-        name: parsed.new_component_name,
+        name: `${parsed.new_component_name}-${randomString()}-${Date.now()}`,
         description: {
           user: description,
           llm: parsed.new_component_description,
         },
-        components: parsed.use_library_components.map(i => ({ name: i.library_component_name, usage: i.library_component_usage_reason })),
+        components: parsed.use_library_components?.map(i => ({ name: i.library_component_name, usage: i.library_component_usage_reason })),
       }
     }
   }

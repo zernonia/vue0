@@ -22,9 +22,9 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         + `Your task is to write a new Vue component for a web app, according to the provided task details.\n`
         + `The Vue component you write can make use of Tailwind classes for styling.\n`
         + `If you judge it is relevant to do so, you can use library components and icons.\n\n`
-        + `If the component is using imported component, dont overwrite the style for background and text color.\n`
+        + `If the component is using imported component, dont overwrite the style for background color and text color.\n`
         + `You will write the full Vue component code, which should include all imports.`
-        + `The code should always start with Vue standard script setup with typescript first, then only template`
+        + `The code should always start with <script setup lang="ts"> first, then only <template>`
         + `Your generated code will be directly written to a .vue component file and used in production.`,
     },
     ...componentDesignContext,
@@ -37,7 +37,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         + `- additional component suggestions :\n`
         + `\`\`\`\n${componentDesignTask.description.llm}\n\`\`\`\n\n\n`
         + `Write the full code for the new Vue component, which uses Tailwind classes if needed (add tailwind dark: classes too if you can; backgrounds in dark: classes should be black), and optionally, library components and icons, based on the provided design task.\n`
-        + `The full code of the new Vue component that you write will be written directly to a .vue file inside the Vue project. Make sure your full code is enclosed with \`\`\`vue blocks.\n`
+        + `The full code of the new Vue component that you write will be written directly to a .vue file inside the Vue project.\n`
         + `Answer with generated code only. DO NOT ADD ANY EXTRA TEXT DESCRIPTION OR COMMENTS BESIDES THE CODE. Your answer contains code only ! component code only !\n`
         + `Important :\n`
         + `- Make sure you import provided components libraries and icons that are provided to you if you use them !\n`
@@ -66,5 +66,5 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     event.node.res.write(chunk)
   }
 
-  event.node.req.componentGeneratedCode = completion
+  event.node.req.componentGeneratedCode = completion.replace('```vue', '').replaceAll('```', '')
 }
