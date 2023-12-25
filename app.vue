@@ -31,7 +31,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="h-screen w-screen flex flex-col items-center justify-center">
+  <div class="w-full h-full flex flex-col items-center justify-center p-8">
     <UiCard class="w-96 mb-8">
       <UiCardHeader>
         <UiCardTitle>vue0</UiCardTitle>
@@ -56,5 +56,12 @@ async function handleSubmit() {
         </UiButton>
       </UiCardFooter>
     </UiCard>
+
+    <div class="w-full p-6 border-t">
+      <h2 class="text-center font-bold text-3xl mb-4">
+        Genereted
+      </h2>
+      <GeneratedList />
+    </div>
   </div>
 </template>
