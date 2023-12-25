@@ -29,6 +29,9 @@ dependencies:
   jiti:
     specifier: ^1.21.0
     version: 1.21.0
+  lucide-vue-next:
+    specifier: ^0.301.0
+    version: 0.301.0(vue@3.3.13)
   openai:
     specifier: ^4.24.0
     version: 4.24.0
@@ -5387,6 +5390,14 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lucide-vue-next@0.301.0(vue@3.3.13):
+    resolution: {integrity: sha512-Oy/Pbc55kJbgPwCpJTL9/Dnvdu5F1foX4qvOXVtIYzVNFV/G14teBRq7W1Y3OTFYfpSzSLAb9ep/XLgVjgWVtw==}
+    peerDependencies:
+      vue: '>=3.0.1'
+    dependencies:
+      vue: 3.3.13(typescript@5.3.3)
+    dev: false
 
   /magic-string-ast@0.3.0:
     resolution: {integrity: sha512-0shqecEPgdFpnI3AP90epXyxZy9g6CRZ+SZ7BcqFwYmtFEnZ1jpevcV5HoyVnlDS9gCnc1UIg3Rsvp3Ci7r8OA==}

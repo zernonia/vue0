@@ -22,6 +22,7 @@
     "giget": "^1.1.3",
     "h3": "^1.9.0",
     "jiti": "^1.21.0",
+    "lucide-vue-next": "^0.301.0",
     "openai": "^4.24.0",
     "radix-vue": "^1.2.5",
     "tailwind-merge": "^2.1.0",
