@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  await validateBody(event)
+  await validateIterateBody(event)
 
   // Enable SSE endpoint
   setHeader(event, 'cache-control', 'no-cache')
