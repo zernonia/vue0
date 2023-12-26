@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
   // Let the connection opened
   event._handled = true
 
-  await designComponentNew(event)
+  await designComponentIteration(event)
   await buildComponentGeneration(event)
-  await generateComponentNew(event)
+  await generateComponentIteration(event)
   await storeComponent(event)
 })
