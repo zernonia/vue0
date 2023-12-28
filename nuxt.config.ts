@@ -22,8 +22,9 @@ export default defineNuxtConfig({
     },
   },
   hooks: {
-    'vite:extendConfig': (config, { isClient, isServer }) => {
+    'vite:extendConfig': (config, { isClient }) => {
       if (isClient)
+      // @ts-expect-error it has alias of vue
         config.resolve.alias.vue = 'vue/dist/vue.esm-bundler.js'
     },
   },
