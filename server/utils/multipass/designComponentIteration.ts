@@ -3,9 +3,9 @@ import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import type { OpenAI } from 'openai'
 
-export default async (event: H3Event<EventHandlerRequest>) => {
-  console.log('> init : design new component')
-  const { description, component } = await readBody(event)
+export default async (event: H3Event<EventHandlerRequest>, component: Component) => {
+  console.log('> init : design component iteration')
+  const { prompt } = await readBody(event)
 
   const components = (await import('@/template/shadcn-vue/metadata.json')).default
   // TODO: include icon
@@ -40,9 +40,8 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     {
       role: `user`,
       content:
-        `- Component name : ${component.name}\n`
-        + `- Component description : \`${component.description}\`\n`
-        + `- New component updates query : \n\`\`\`\n${description}\n\`\`\`\n\n`
+        `- Component description : \`${component.description}\`\n`
+        + `- New component updates query : \n\`\`\`\n${prompt}\n\`\`\`\n\n`
         + `Design the Vue component updates for the user, as the creative genius you are`,
     },
   ]
@@ -77,7 +76,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
       event.node.req.componentDesignTask = {
         name: `${parsed.new_component_name}-${randomString()}-${Date.now()}`,
         description: {
-          user: description,
+          user: prompt,
           llm: parsed.new_component_description,
         },
         components: parsed.use_library_components?.map(i => ({ name: i.library_component_name, usage: i.library_component_usage_reason })),

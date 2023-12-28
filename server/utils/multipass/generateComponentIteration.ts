@@ -8,9 +8,8 @@ declare module 'h3' {
   }
 }
 
-export default async (event: H3Event<EventHandlerRequest>) => {
-  console.log('> init : generate new component')
-  const { component } = await readBody(event)
+export default async (event: H3Event<EventHandlerRequest>, component: Component) => {
+  console.log('> init : generate component iteration')
   const tiktokenEncoder = get_encoding('cl100k_base')
   const componentDesignContext = event.node.req.componentDesignContext
   const componentDesignTask = event.node.req.componentDesignTask
@@ -32,8 +31,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     {
       role: `user`,
       content:
-        `- COMPONENT NAME : ${component.name}\n\n`
-        + `- COMPONENT DESCRIPTION :\n`
+        `- COMPONENT DESCRIPTION :\n`
         + `\`\`\`\n${component.description}\n\`\`\`\n\n`
         + `- CURRENT COMPONENT CODE :\n\n`
         + `\`\`\`vue\n${component.code}\n\`\`\``

@@ -1,5 +1,13 @@
+import { eq } from 'drizzle-orm'
+
 export default defineEventHandler(async (event) => {
-  await validateIterateBody(event)
+  const { basedOnResultId } = await validateIterateBody(event)
+  const { components } = tables
+  const result = await useDB().select().from(components).where(eq(components.id, basedOnResultId))
+  const previousResult = result?.[0]
+
+  if (!previousResult.code)
+    return createError('Previous code not found')
 
   // Enable SSE endpoint
   setHeader(event, 'cache-control', 'no-cache')
@@ -10,8 +18,8 @@ export default defineEventHandler(async (event) => {
   // Let the connection opened
   event._handled = true
 
-  await designComponentIteration(event)
+  await designComponentIteration(event, previousResult)
   await buildComponentGeneration(event)
-  await generateComponentIteration(event)
-  await storeComponent(event)
+  await generateComponentIteration(event, previousResult)
+  await storeComponent(event, previousResult.slug)
 })

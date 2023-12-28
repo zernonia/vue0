@@ -21,7 +21,7 @@ declare module 'h3' {
 
 export default async (event: H3Event<EventHandlerRequest>) => {
   console.log('> init : design new component')
-  const { description } = await readBody(event)
+  const { prompt } = await readBody(event)
 
   const components = (await import('@/template/shadcn-vue/metadata.json')).default
   // TODO: include icon
@@ -56,7 +56,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     {
       role: `user`,
       content:
-        `USER QUERY : \n\`\`\`\n${description}\n\`\`\`\n\n`
+        `USER QUERY : \n\`\`\`\n${prompt}\n\`\`\`\n\n`
         + `Design the new Vue web component task for the user as the creative genius you are`,
     },
   ]
@@ -91,7 +91,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
       event.node.req.componentDesignTask = {
         name: `${parsed.new_component_name}-${randomString()}-${Date.now()}`,
         description: {
-          user: description,
+          user: prompt,
           llm: parsed.new_component_description,
         },
         components: parsed.use_library_components?.map(i => ({ name: i.library_component_name, usage: i.library_component_usage_reason })),

@@ -60,16 +60,15 @@ export default async (event: H3Event<EventHandlerRequest>) => {
       .join(`\n\n`)}`
 
     return {
-
       role: 'user',
       content: `Library components can be used while making the new Vue component\n\n`
       + `Suggested library component (${idx + 1}/${mappedComponent.length}) : ${component.name} - ${component.description}\n`
       + `Suggested usage : ${component.usage}\n\n\n`
-      // + `# ${component.name} can be imported into the new component like this:\n`
-      // + `\`\`\`vue\n${
-      // e.docs.import.code.trim()
-      // }\n\`\`\`\n\n---\n\n`
-      + `# examples of how ${component.name} can be used inside the new component:\n${examplesBlock}`,
+      + `# examples of how ${component.name} can be used inside the new component:\n${examplesBlock}`
+      + `\n\nIcon elements can optionally be used when making the Vue component\n`
+      + `Example for using 'lucide-vue-next\n`
+      + `\`\`\`1. ArrowRight\n2. Check\n3. Home\n4. User\n5. Search`
+      + `\`\`\``,
     } satisfies OpenAI.ChatCompletionMessageParam
   })
 
