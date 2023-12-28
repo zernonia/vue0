@@ -59,9 +59,6 @@ async function handleSubmit() {
   </div>
 
   <div class="w-full p-6 border-t">
-    <h2 class="text-center font-bold text-3xl mb-4">
-      Genereted
-    </h2>
-    <GeneratedList />
+    <Output />
   </div>
 </template>
