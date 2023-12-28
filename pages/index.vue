@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { GithubLogoIcon } from '@radix-icons/vue'
 
-const description = ref('Simple chat app')
+const prompt = ref('Simple chat app')
 const content = ref('')
 async function handleSubmit() {
   const completion = await $fetch<ReadableStream>('/api/create', {
     method: 'POST',
     body: {
-      description: description.value,
+      prompt: prompt.value,
     },
     responseType: 'stream',
   })
@@ -39,8 +39,8 @@ async function handleSubmit() {
 
       <UiCardContent>
         <div class="flex items-center gap-2">
-          <UiInput v-model="description" />
-          <UiButton :disabled="!description.length" @click="handleSubmit">
+          <UiInput v-model="prompt" />
+          <UiButton :disabled="!prompt.length" @click="handleSubmit">
             Send
           </UiButton>
         </div>
@@ -59,6 +59,6 @@ async function handleSubmit() {
   </div>
 
   <div class="w-full p-6 border-t">
-    <Output />
+    <GeneratedList />
   </div>
 </template>

@@ -1,31 +1,24 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
-const { data } = useFetch('/api/component/all')
-const componentList = shallowRef<{ name: string, comp: Component }[]>()
-
-watch(data, async (items) => {
-  if (!items)
-    return
-  componentList.value = await Promise.all(items.map(async (item) => {
-    const comp = (await import(`@/components/generated/${item?.name.replace('.json', '')}.vue`)).default
-    return {
-      name: item!.name,
-      comp,
-    }
-  }))
-}, { immediate: true, deep: true })
+const { data } = await useFetch('/api/component/all')
 </script>
 
 <template>
   <div class="w-full px-4 flex flex-col gap-8">
     <NuxtLink
-      v-for="comp in componentList"
-      :key="comp.name"
-      :to="`/t/${comp.name}`"
-      class="border rounded-xl block shadow overflow-hidden"
+      v-for="item in data"
+      :key="item.id"
+      :to="`/t/${item.slug}`"
     >
-      <component :is="comp.comp" />
+      <UiCard class="py-12  hover:shadow-lg transition">
+        <UiCardContent>
+          <Output v-if="item.code" :sfc-string="item.code" />
+          <div v-else>
+            Empty
+          </div>
+        </UiCardContent>
+      </UiCard>
     </NuxtLink>
   </div>
 </template>
