@@ -1,10 +1,11 @@
-export default defineEventHandler(async (event) => {
-  type Item = typeof event.node.req.componentDesignTask & {
-    created: number
-    code: string
-  }
+import { desc } from 'drizzle-orm'
 
-  const keys = await useStorage('fs').getKeys()
-  const items = await Promise.all(keys.map(key => useStorage<Item>('fs').getItem(key)))
-  return items.sort((a, b) => b!.created - a!.created)
+export default defineEventHandler(async (_event) => {
+  const { components } = tables
+  const res = await useDB()
+    .select()
+    .from(components)
+    .orderBy(desc(components.createdAt))
+    .all()
+  return res
 })
