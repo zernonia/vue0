@@ -16,7 +16,6 @@
     "parse:repo": "jiti template/shadcn-vue/parseMeta"
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.7",
     "@libsql/client": "0.4.0-pre.5",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-icons/vue": "^1.0.0",
@@ -29,6 +28,7 @@
     "giget": "^1.1.3",
     "h3": "^1.9.0",
     "jiti": "^1.21.0",
+    "js-tiktoken": "^1.0.8",
     "lucide-vue-next": "^0.301.0",
     "openai": "^4.24.0",
     "radix-vue": "^1.2.5",

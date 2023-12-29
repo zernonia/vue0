@@ -1,5 +1,4 @@
 import type { EventHandlerRequest, H3Event } from 'h3'
-import { get_encoding } from '@dqbd/tiktoken'
 import type { OpenAI } from 'openai'
 
 declare module 'h3' {
@@ -10,7 +9,8 @@ declare module 'h3' {
 
 export default async (event: H3Event<EventHandlerRequest>, component: Component) => {
   console.log('> init : generate component iteration')
-  const tiktokenEncoder = get_encoding('cl100k_base')
+
+  const encoder = encoding()
   const componentDesignContext = event.node.req.componentDesignContext
   const componentDesignTask = event.node.req.componentDesignTask
 
@@ -53,7 +53,7 @@ export default async (event: H3Event<EventHandlerRequest>, component: Component)
     },
   ]
 
-  const contextPromptToken = tiktokenEncoder.encode(context.map(i => i.content).join('')).length
+  const contextPromptToken = encoder.encode(context.map(i => i.content).join('')).length
   console.log(`> total context prompt tokens (estimate) : ${contextPromptToken}`)
 
   const stream = await useOpenAI(event).chat.completions.create({

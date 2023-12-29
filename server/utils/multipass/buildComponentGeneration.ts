@@ -1,6 +1,4 @@
-import fs from 'node:fs'
 import type { EventHandlerRequest, H3Event } from 'h3'
-import { get_encoding } from '@dqbd/tiktoken'
 import type { OpenAI } from 'openai'
 
 declare module 'h3' {
@@ -11,13 +9,13 @@ declare module 'h3' {
 
 export default async (event: H3Event<EventHandlerRequest>) => {
   console.log('> init : building component generation')
-  const tiktokenEncoder = get_encoding('cl100k_base')
   const TOKEN_LIMIT = 600
   const componentDesignTask = event.node.req.componentDesignTask
   const components = (await import('@/template/shadcn-vue/metadata.json')).default
 
   const retrievedComponent = components.filter(i => componentDesignTask.components.find(j => j.name === i.name))
 
+  const encoder = encoding()
   const mappedComponent = retrievedComponent.map((component) => {
     const componentExamples = [...component.examples]
     const examples: typeof componentExamples = []
@@ -29,7 +27,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         1,
       )[0]
 
-      totalTokens += tiktokenEncoder.encode(randomExample.code).length
+      totalTokens += encoder.encode(randomExample.code).length
 
       if (totalTokens < TOKEN_LIMIT)
         examples.push(randomExample)
