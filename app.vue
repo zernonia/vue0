@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { GithubLogoIcon } from '@radix-icons/vue'
+
 const openaiKey = useOpenAIKey()
 
 useHead({
@@ -18,7 +20,12 @@ useHead({
 
         <div class="mx-auto" />
 
-        <div>
+        <div class="flex items-center gap-2">
+          <UiButton as-child>
+            <NuxtLink to="https://github.com/zernonia/vue0" target="_blank">
+              <GithubLogoIcon class="mr-2" /> GitHub
+            </NuxtLink>
+          </UiButton>
           <UiInput v-model="openaiKey" placeholder="OpenAI API key" />
         </div>
       </header>
