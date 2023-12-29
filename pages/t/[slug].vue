@@ -12,37 +12,10 @@ watch(data, (n) => {
 }, { immediate: true })
 
 const prompt = ref('')
-const loading = ref(false)
-const content = ref('')
-
-async function handleSubmit() {
-  loading.value = true
-
-  const completion = await $fetch<ReadableStream>('/api/iterate', {
-    method: 'POST',
-    body: {
-      prompt: prompt.value,
-      basedOnResultId: selectedVersion.value?.id,
-    },
-    responseType: 'stream',
-  })
-
-  const reader = completion.getReader()
-  const decoder = new TextDecoder('utf-8')
-
-  const read = async (): Promise<void> => {
-    const { done, value } = await reader.read()
-    if (done) {
-      console.log('release locked')
-      return reader.releaseLock()
-    }
-
-    const chunk = decoder.decode(value, { stream: true })
-    content.value += chunk
-    return read()
-  }
-  await read()
-}
+const { handleSubmit, loading } = usePrompt('/api/iterate', () => ({
+  prompt: prompt.value,
+  basedOnResultId: selectedVersion.value?.id,
+}))
 </script>
 
 <template>

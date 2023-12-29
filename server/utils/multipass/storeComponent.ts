@@ -23,10 +23,5 @@ export default async (event: H3Event<EventHandlerRequest>, slug?: string | null)
     description: componentDesignTask.description.user,
   }).returning().get()
 
-  fs.writeFileSync(
-    `components/generated/${componentDesignTask.name}.vue`,
-    componentGeneratedCode,
-  )
-
   console.dir(result)
 }

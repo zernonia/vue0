@@ -53,7 +53,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   const contextPromptToken = tiktokenEncoder.encode(context.map(i => i.content).join('')).length
   console.log(`> total context prompt tokens (estimate) : ${contextPromptToken}`)
 
-  const stream = await openai.chat.completions.create({
+  const stream = await useOpenAI(event).chat.completions.create({
     model: 'gpt-4-1106-preview',
     messages: context,
     stream: true,

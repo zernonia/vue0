@@ -2,32 +2,9 @@
 import { GithubLogoIcon } from '@radix-icons/vue'
 
 const prompt = ref('Simple chat app')
-const content = ref('')
-async function handleSubmit() {
-  const completion = await $fetch<ReadableStream>('/api/create', {
-    method: 'POST',
-    body: {
-      prompt: prompt.value,
-    },
-    responseType: 'stream',
-  })
-
-  const reader = completion.getReader()
-  const decoder = new TextDecoder('utf-8')
-
-  const read = async (): Promise<void> => {
-    const { done, value } = await reader.read()
-    if (done) {
-      console.log('release locked')
-      return reader.releaseLock()
-    }
-
-    const chunk = decoder.decode(value, { stream: true })
-    content.value += chunk
-    return read()
-  }
-  await read()
-}
+const { handleSubmit, content } = usePrompt('/api/create', () => ({
+  prompt: prompt.value,
+}))
 </script>
 
 <template>
