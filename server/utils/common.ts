@@ -24,7 +24,7 @@ export function useSSE(event: H3Event<EventHandlerRequest>) {
     // Close connection, trigger release locked
     event.node.res.end()
   }
-  event.node.req.on('close', close)
+  // event.node.req.on('close', close)
 
   return {
     close,
