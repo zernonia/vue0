@@ -8,6 +8,7 @@ export const openai = new OpenAI({
 })
 
 export function useOpenAI(event: H3Event<EventHandlerRequest>) {
+  console.log(event.node.req.headers, event.node.req.headers['x-openai-key'])
   const apiKey = event.node.req.headers['x-openai-key']?.toString() || process.env.NUXT_OPENAI_API_KEY
   return new OpenAI({
     apiKey,
