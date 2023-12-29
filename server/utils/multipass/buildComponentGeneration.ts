@@ -15,7 +15,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
 
   const retrievedComponent = components.filter(i => componentDesignTask.components.find(j => j.name === i.name))
 
-  // const encoder = encoding()
+  const encoder = encoding()
   const mappedComponent = retrievedComponent.map((component) => {
     const componentExamples = [...component.examples]
     const examples: typeof componentExamples = []
@@ -27,7 +27,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         1,
       )[0]
 
-      totalTokens += 400 // encoder.encode(randomExample.code).length
+      totalTokens += encoder.encode(randomExample.code).length
 
       if (totalTokens < TOKEN_LIMIT)
         examples.push(randomExample)
