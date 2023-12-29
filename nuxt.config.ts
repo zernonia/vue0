@@ -20,4 +20,11 @@ export default defineNuxtConfig({
         config.resolve.alias.vue = 'vue/dist/vue.esm-bundler.js'
     },
   },
+  nitro: {
+    vercel: {
+      functions: {
+        maxDuration: 300, // 5mins maximum possible for Vercel Pro
+      },
+    },
+  },
 })
