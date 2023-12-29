@@ -42,24 +42,24 @@ export default defineNuxtModule<ShadcnVueOptions>({
       })
     },
   },
-  async setup({ componentDir, prefix }) {
-    const isVeeValidateExist = await tryResolveModule('vee-validate')
+  async setup({ prefix }) {
+    // const isVeeValidateExist = await tryResolveModule('vee-validate')
 
-    if (isVeeValidateExist !== undefined) {
-      addComponent({
-        filePath: 'vee-validate',
-        export: 'Form',
-        name: `${prefix}Form`,
-        priority: 999,
-      })
+    // if (isVeeValidateExist !== undefined) {
+    //   addComponent({
+    //     filePath: 'vee-validate',
+    //     export: 'Form',
+    //     name: `${prefix}Form`,
+    //     priority: 999,
+    //   })
 
-      addComponent({
-        filePath: 'vee-validate',
-        export: 'Field',
-        name: `${prefix}FormField`,
-        priority: 999,
-      })
-    }
+    //   addComponent({
+    //     filePath: 'vee-validate',
+    //     export: 'Field',
+    //     name: `${prefix}FormField`,
+    //     priority: 999,
+    //   })
+    // }
 
     addComponent({
       filePath: 'radix-vue',
