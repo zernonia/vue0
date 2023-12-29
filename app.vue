@@ -1,5 +1,10 @@
 <script setup lang="ts">
 
+useHead({
+  script: [
+    { src: 'assets/tailwind.js' },
+  ],
+})
 </script>
 
 <template>
