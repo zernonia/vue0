@@ -6,14 +6,6 @@ useHead({
     { src: '/cdn/tailwind.js' },
   ],
 })
-
-onMounted(() => {
-  $fetch('/api/test', {
-    headers: {
-      'x-openai-key': openaiKey.value,
-    },
-  })
-})
 </script>
 
 <template>
