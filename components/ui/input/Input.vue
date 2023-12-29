@@ -3,10 +3,6 @@ import { useAttrs } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '@/utils'
 
-defineOptions({
-  inheritAttrs: false,
-})
-
 const props = defineProps<{
   defaultValue?: string | number
   modelValue?: string | number

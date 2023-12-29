@@ -11,12 +11,14 @@ defineProps<{
       :key="item.id"
       :to="`/t/${item.slug}`"
     >
-      <UiCard class="py-12 hover:shadow-lg transition ">
-        <UiCardContent class="m-auto w-max">
-          <Output v-if="item.code" :sfc-string="item.code" />
-          <div v-else>
-            Empty
-          </div>
+      <UiCard class="py-12 hover:shadow-lg transition  flex w-full h-full">
+        <UiCardContent class="m-auto">
+          <OutputWrapper>
+            <LazyOutput v-if="item.code" :sfc-string="item.code" />
+            <div v-else>
+              Empty
+            </div>
+          </OutputWrapper>
         </UiCardContent>
       </UiCard>
     </NuxtLink>

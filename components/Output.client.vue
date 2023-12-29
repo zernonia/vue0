@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { compileScript, compileTemplate, parse } from '@vue/compiler-sfc'
 import * as Icon from 'lucide-vue-next'
+import { useToast } from '@/components/ui/toast'
 
 const props = defineProps<{
   sfcString: string
@@ -11,9 +12,9 @@ const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
   const { descriptor } = parse(props.sfcString)
-  const template = compileTemplate({ id: '123', filename: 'main.vue', source: descriptor.template?.content ?? '' })
+  // const template = compileTemplate({ id: '123', filename: 'main.vue', source: descriptor.template?.content ?? '' })
   const script = compileScript(descriptor, { id: '123' })
-  console.log({ descriptor, script, template })
+  // console.log({ descriptor, script, template })
 
   const components = {}
   Object.entries(script.imports!).forEach(async ([key, value]) => {
@@ -28,15 +29,44 @@ const Comp = computed(() => {
     }
   })
 
+  const variableNodes = script.scriptSetupAst?.filter(i => i.type === 'VariableDeclaration')
+  const returnedValue: string[] = []
+
+  variableNodes?.forEach((node) => {
+    if ('declarations' in node) {
+      const childNode = node.declarations[0].id
+      switch (childNode.type) {
+        case 'Identifier': {
+          returnedValue.push(childNode.name)
+          break
+        }
+        case 'ObjectPattern': {
+          if (childNode.properties[0].type === 'ObjectProperty' && childNode.properties[0].value.type === 'Identifier')
+            returnedValue.push(childNode.properties[0].value.name)
+          break
+        }
+        default: {
+          // very bad manual parsing.. not sure if there's a better way
+        }
+      }
+    }
+  })
+
+  // no-eval allow eval temporarily
+  // eslint-disable-next-line no-eval
+  const setupString = eval(`({ setup() {
+    ${variableNodes?.map(node => `${script.loc.source.slice(node.start!, node.end!)}\n`).join('')}
+    return { ${returnedValue.join(',')} }
+  }})`)
+
   return defineComponent({
     components,
+    setup: setupString?.setup,
     template: descriptor.template?.content ?? '<div>Empty</div>',
   })
 })
 </script>
 
 <template>
-  <div>
-    <Comp />
-  </div>
+  <Comp />
 </template>

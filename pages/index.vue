@@ -8,7 +8,10 @@ const { handleSubmit, content, onDone } = usePrompt('/api/create', () => ({
   prompt: prompt.value,
 }))
 
-onDone(refresh)
+onDone(async () => {
+  await refresh()
+  await navigateTo(`/t/${data.value?.[0].slug}`)
+})
 </script>
 
 <template>
