@@ -12,3 +12,4 @@ Execution plan:
 ## Credit
 - [openv0](https://github.com/raidendotai/openv0/)
 - [Atinux's Todos Edge](https://github.com/Atinux/nuxt-todos-edge)
+- [Nuxt SSE](https://gist.github.com/Atinux/05836469acca9649fa2b9e865df898a2)
