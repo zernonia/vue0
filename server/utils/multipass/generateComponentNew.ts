@@ -10,7 +10,7 @@ declare module 'h3' {
 export default async (event: H3Event<EventHandlerRequest>) => {
   console.log('> init : generate new component')
 
-  const encoder = encoding()
+  // const encoder = encoding()
   const componentDesignContext = event.node.req.componentDesignContext
   const componentDesignTask = event.node.req.componentDesignTask
 
@@ -50,8 +50,8 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     },
   ]
 
-  const contextPromptToken = encoder.encode(context.map(i => i.content).join('')).length
-  console.log(`> total context prompt tokens (estimate) : ${contextPromptToken}`)
+  // const contextPromptToken = encoder.encode(context.map(i => i.content).join('')).length
+  // console.log(`> total context prompt tokens (estimate) : ${contextPromptToken}`)
 
   const stream = await useOpenAI(event).chat.completions.create({
     model: 'gpt-4-1106-preview',

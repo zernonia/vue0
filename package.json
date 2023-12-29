@@ -13,7 +13,8 @@
     "migrate": "drizzle-kit generate:sqlite",
     "studio": "drizzle-kit studio",
     "download:repo": "cd template && jiti downloadRepo",
-    "parse:repo": "jiti template/shadcn-vue/parseMeta"
+    "parse:repo": "jiti template/shadcn-vue/parseMeta",
+    "analyze": "NITRO_PRESET=vercel_edge nuxt analyze"
   },
   "dependencies": {
     "@libsql/client": "0.4.0-pre.5",
