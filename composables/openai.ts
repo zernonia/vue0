@@ -4,6 +4,8 @@ export function useOpenAIKey() {
 
 type FetchRequest = Parameters<typeof $fetch>[0]
 export function usePrompt(request: FetchRequest, body: Record<string, any>) {
+  const fetchResult = createEventHook<void>()
+
   const openaiKey = useOpenAIKey()
   const loading = ref(false)
   const content = ref('')
@@ -28,6 +30,8 @@ export function usePrompt(request: FetchRequest, body: Record<string, any>) {
       const { done, value } = await reader.read()
       if (done) {
         console.log('release locked')
+        loading.value = false
+        fetchResult.trigger()
         return reader.releaseLock()
       }
 
@@ -42,5 +46,6 @@ export function usePrompt(request: FetchRequest, body: Record<string, any>) {
     loading,
     content,
     handleSubmit,
+    onDone: fetchResult.on,
   }
 }

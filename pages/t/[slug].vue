@@ -4,7 +4,7 @@ import { SparklesIcon } from 'lucide-vue-next'
 const route = useRoute()
 const slug = computed(() => route.params.slug)
 
-const { data } = await useFetch(`/api/component/${slug.value}`)
+const { data, refresh } = await useFetch(`/api/component/${slug.value}`)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 watch(data, (n) => {
@@ -12,10 +12,15 @@ watch(data, (n) => {
 }, { immediate: true })
 
 const prompt = ref('')
-const { handleSubmit, loading } = usePrompt('/api/iterate', () => ({
+const { handleSubmit, loading, onDone } = usePrompt('/api/iterate', () => ({
   prompt: prompt.value,
   basedOnResultId: selectedVersion.value?.id,
 }))
+
+onDone(() => {
+  // when finish, refresh the data
+  refresh()
+})
 </script>
 
 <template>

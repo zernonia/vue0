@@ -3,7 +3,7 @@ const openaiKey = useOpenAIKey()
 
 useHead({
   script: [
-    { src: '/assets/tailwind.js' },
+    { src: '/cdn/tailwind.js' },
   ],
 })
 </script>

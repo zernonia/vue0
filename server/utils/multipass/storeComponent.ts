@@ -12,16 +12,12 @@ export default async (event: H3Event<EventHandlerRequest>, slug?: string | null)
   const componentDesignTask = event.node.req.componentDesignTask
   const componentGeneratedCode = event.node.req.componentGeneratedCode
 
-  const result = await useStorage('fs').setItem(`${componentDesignTask.name}.json`, {
-    ...componentDesignTask,
-    created: Date.now(),
-    code: componentGeneratedCode,
-  })
-  await useDB().insert(tables.components).values({
+  const result = await useDB().insert(tables.components).values({
     slug,
     code: componentGeneratedCode,
     description: componentDesignTask.description.user,
   }).returning().get()
 
   console.dir(result)
+  return result
 }

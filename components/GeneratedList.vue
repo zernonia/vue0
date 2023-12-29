@@ -11,8 +11,8 @@ const { data } = await useFetch('/api/component/all')
       :key="item.id"
       :to="`/t/${item.slug}`"
     >
-      <UiCard class="py-12  hover:shadow-lg transition">
-        <UiCardContent>
+      <UiCard class="py-12 hover:shadow-lg transition ">
+        <UiCardContent class="m-auto w-max">
           <Output v-if="item.code" :sfc-string="item.code" />
           <div v-else>
             Empty

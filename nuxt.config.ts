@@ -13,14 +13,6 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui',
   },
-  nitro: {
-    storage: {
-      fs: {
-        driver: 'fsLite',
-        base: './tmp',
-      },
-    },
-  },
   hooks: {
     'vite:extendConfig': (config, { isClient }) => {
       if (isClient)
