@@ -7,7 +7,7 @@ declare module 'h3' {
   }
 }
 
-export default async (event: H3Event<EventHandlerRequest>, component: Component) => {
+export default async (event: H3Event<EventHandlerRequest>, component: DBComponent) => {
   console.log('> init : generate component iteration')
 
   const encoder = encoding()

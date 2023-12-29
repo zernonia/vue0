@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import type { OpenAI } from 'openai'
 
-export default async (event: H3Event<EventHandlerRequest>, component: Component) => {
+export default async (event: H3Event<EventHandlerRequest>, component: DBComponent) => {
   console.log('> init : design component iteration')
   const { prompt } = await readBody(event)
 

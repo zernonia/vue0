@@ -2,9 +2,13 @@
 import { GithubLogoIcon } from '@radix-icons/vue'
 
 const prompt = ref('Simple chat app')
-const { handleSubmit, content } = usePrompt('/api/create', () => ({
+
+const { data, refresh } = await useFetch<DBComponent[]>('/api/component/all')
+const { handleSubmit, content, onDone } = usePrompt('/api/create', () => ({
   prompt: prompt.value,
 }))
+
+onDone(refresh)
 </script>
 
 <template>
@@ -36,6 +40,6 @@ const { handleSubmit, content } = usePrompt('/api/create', () => ({
   </div>
 
   <div class="w-full p-6 border-t">
-    <GeneratedList />
+    <GeneratedList :data="data" />
   </div>
 </template>

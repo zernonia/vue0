@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-
-const { data } = await useFetch('/api/component/all')
+defineProps<{
+  data: DBComponent[] | null
+}>()
 </script>
 
 <template>
-  <div class="w-full px-4 flex flex-col gap-8">
+  <div v-if="data?.length" class="w-full px-4 flex flex-col gap-8">
     <NuxtLink
       v-for="item in data"
       :key="item.id"
