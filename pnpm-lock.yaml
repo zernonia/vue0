@@ -97,6 +97,9 @@ devDependencies:
   shadcn-nuxt:
     specifier: ^0.1.0
     version: 0.1.0
+  shikiji:
+    specifier: ^0.9.14
+    version: 0.9.14
   vue:
     specifier: ^3.3.12
     version: 3.3.13(typescript@5.3.3)
@@ -11029,6 +11032,16 @@ packages:
 
   /shell-quote@1.8.1:
     resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
+    dev: true
+
+  /shikiji-core@0.9.14:
+    resolution: {integrity: sha512-ja+PUlDCwMMIrr9FsRhMYQHKDbjWC3VTUtKfvt20p5u4iEQFYJ/oJn+gfa1eixP6+HDHvE9Zb1vOs8TJS7FcUA==}
+    dev: true
+
+  /shikiji@0.9.14:
+    resolution: {integrity: sha512-u9VUYYH/S6/ssA4hgAjp2KBdPymC2wRKd4omwkJSG8BRBtHJ8M6ubjnFjdqWbNlqvAkxoyaG+DWzQEmcEuLFUA==}
+    dependencies:
+      shikiji-core: 0.9.14
     dev: true
 
   /side-channel@1.0.4:

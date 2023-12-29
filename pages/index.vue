@@ -32,7 +32,7 @@ onDone(async () => {
     </UiCard>
   </div>
 
-  <div class="w-full p-6 border-t">
+  <div class="w-full p-6 border bg-gray-100 rounded-xl">
     <h2 class="font-bold text-3xl text-center my-6">
       Generated
     </h2>
