@@ -30,8 +30,8 @@ const { copy, copied } = useClipboard()
 <template>
   <div>
     <div class="flex w-full">
-      <div class="flex-shrink-0 w-64 mr-4">
-        <h2 class="font-bold">
+      <div class="flex-shrink-0 mt-2 w-64 mr-4">
+        <h2 class="font-bold text-lg">
           History
         </h2>
         <div class="mt-4 flex flex-col-reverse gap-3">

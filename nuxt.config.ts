@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@vueuse/nuxt'],
+  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@vueuse/nuxt', '@nuxtjs/google-fonts'],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -25,6 +25,11 @@ export default defineNuxtConfig({
       functions: {
         maxDuration: 300, // 5mins maximum possible for Vercel Pro
       },
+    },
+  },
+  googleFonts: {
+    families: {
+      Inter: '400..800',
     },
   },
 })

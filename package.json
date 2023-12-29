@@ -40,6 +40,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2.4.6",
     "@nuxt/devtools": "latest",
+    "@nuxtjs/google-fonts": "^3.1.3",
     "@nuxtjs/tailwindcss": "^6.10.1",
     "@types/better-sqlite3": "^7.6.8",
     "@vueuse/nuxt": "^10.7.0",
