@@ -6,7 +6,6 @@ import type { OpenAI } from 'openai'
 declare module 'h3' {
   interface NodeIncomingMessage {
     componentDesignTask: {
-      name: string
       description: {
         user: string
         llm: string
@@ -26,7 +25,6 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   const components = (await import('@/template/shadcn-vue/metadata.json')).default
   // TODO: include icon
   const functionSchema = z.object({
-    new_component_name: z.string(),
     new_component_description: z.string().describe(`Write a description for Vue component design task based on the user query. Stick strictly to what the user wants in their request - do not go off track`),
     use_library_components: z.array(z.object({
       library_component_name: z.enum(components.map(i => i.name) as [string]),
@@ -89,7 +87,6 @@ export default async (event: H3Event<EventHandlerRequest>) => {
 
     if (parsed) {
       event.node.req.componentDesignTask = {
-        name: `${parsed.new_component_name}-${randomString()}-${Date.now()}`,
         description: {
           user: prompt,
           llm: parsed.new_component_description,
