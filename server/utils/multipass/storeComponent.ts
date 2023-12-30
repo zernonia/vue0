@@ -16,6 +16,8 @@ export default async (event: H3Event<EventHandlerRequest>, id: string, slug?: st
     slug,
     code: componentGeneratedCode,
     description: componentDesignTask.description.user,
+    metadata: componentDesignTask,
+    completed: true,
   }).where(eq(tables.components.id, id)).returning().get()
 
   console.dir(result)
