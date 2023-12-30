@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
-import { compileScript, compileTemplate, parse } from '@vue/compiler-sfc'
+import { compileScript, parse } from '@vue/compiler-sfc'
 import * as Icon from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast'
 
@@ -11,10 +11,18 @@ const props = defineProps<{
 const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
+  if (!props.sfcString.includes(`<template>`)) {
+    // eslint-disable-next-line vue/one-component-per-file
+    return defineComponent({
+      template: '<div>Loading...</div>',
+    })
+  }
+
   const { descriptor } = parse(props.sfcString)
-  // const template = compileTemplate({ id: '123', filename: 'main.vue', source: descriptor.template?.content ?? '' })
+  const template = parseTemplate(descriptor.template?.content ?? '')
   const script = compileScript(descriptor, { id: '123' })
   // console.log({ descriptor, script, template })
+  console.log({ template })
 
   const components = {}
   Object.entries(script.imports!).forEach(async ([key, value]) => {
@@ -62,7 +70,7 @@ const Comp = computed(() => {
   return defineComponent({
     components,
     setup: setupString?.setup,
-    template: descriptor.template?.content ?? '<div>Empty</div>',
+    template: template ?? '<div>Empty</div>',
   })
 })
 </script>
