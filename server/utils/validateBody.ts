@@ -4,6 +4,7 @@ import { readValidatedBody } from 'h3'
 
 export async function validateCreateBody(event: H3Event<EventHandlerRequest>) {
   const result = await readValidatedBody(event, z.object({
+    id: z.string(),
     prompt: z.string(),
   }).safeParse)
 
@@ -19,6 +20,7 @@ export async function validateCreateBody(event: H3Event<EventHandlerRequest>) {
 
 export async function validateIterateBody(event: H3Event<EventHandlerRequest>) {
   const result = await readValidatedBody(event, z.object({
+    id: z.string(),
     prompt: z.string(),
     basedOnResultId: z.string(),
   }).safeParse)

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 const prompt = ref('Simple chat app')
 
-const { data, refresh } = await useFetch<DBComponent[]>('/api/component/all')
-const { handleSubmit, content, onDone } = usePrompt('/api/create', () => ({
-  prompt: prompt.value,
-}))
+const { data } = await useFetch<DBComponent[]>('/api/component/all')
+const { isNewPrompt, handleInit, loading } = usePrompt()
 
-onDone(async () => {
-  await refresh()
-  await navigateTo(`/t/${data.value?.[0].slug}`)
-})
+async function handleSubmit() {
+  loading.value = true
+  isNewPrompt.value = true
+  const result = await handleInit(prompt.value)
+  await navigateTo(`/t/${result.slug}`)
+}
 </script>
 
 <template>
@@ -26,8 +26,6 @@ onDone(async () => {
             Send
           </UiButton>
         </div>
-
-        {{ content }}
       </UiCardContent>
     </UiCard>
   </div>

@@ -4,7 +4,7 @@ import { Clipboard, ClipboardCheck, Code2Icon, SparklesIcon } from 'lucide-vue-n
 const route = useRoute()
 const slug = computed(() => route.params.slug)
 
-const { data, refresh } = await useFetch(`/api/component/${slug.value}`)
+const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 watch(data, (n) => {
@@ -12,15 +12,35 @@ watch(data, (n) => {
 }, { immediate: true })
 
 const prompt = ref('')
-const { handleSubmit, loading, onDone } = usePrompt('/api/iterate', () => ({
-  prompt: prompt.value,
-  basedOnResultId: selectedVersion.value?.id,
-}))
+const { loading, contentCode, onDone, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
+
+const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value)
+
+async function handleSubmit() {
+  const basedOnResultId = selectedVersion.value?.id
+  const result = await handleInit(prompt.value, selectedVersion.value?.slug)
+
+  data.value?.unshift(result)
+  handleIterate({
+    id: result.id,
+    prompt: result.description,
+    basedOnResultId,
+  })
+}
 
 onDone(() => {
-  // when finish, refresh the data
   refresh()
   prompt.value = ''
+})
+
+onMounted(() => {
+  if (isNewPrompt.value && data.value?.length === 1) {
+    // need not to handleInit as it will be done on the landing page
+    handleCreate({
+      id: data.value[0].id,
+      prompt: data.value[0].description,
+    })
+  }
 })
 
 const isPreviewing = ref(false)
@@ -67,10 +87,10 @@ const { copy, copied } = useClipboard()
         </div>
 
         <div class="border mt-4 rounded-xl h-[80vh] w-full flex overflow-auto relative">
-          <LazyOutputCode v-show="isPreviewing" :sfc-string="selectedVersion?.code ?? ''" />
+          <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <div class="m-auto py-12">
             <OutputWrapper>
-              <LazyOutput v-if="selectedVersion?.code" :sfc-string="selectedVersion?.code" />
+              <LazyOutput v-if="sfcString" :sfc-string="sfcString" />
             </OutputWrapper>
           </div>
         </div>

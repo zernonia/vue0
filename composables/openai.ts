@@ -1,22 +1,38 @@
 export function useOpenAIKey() {
   return useLocalStorage('openai_key', () => '')
 }
+export function useNewPrompt() {
+  return useState('init', () => false)
+}
 
 type FetchRequest = Parameters<typeof $fetch>[0]
-export function usePrompt(request: FetchRequest, body: Record<string, any>) {
+export function usePrompt() {
   const fetchResult = createEventHook<void>()
 
   const openaiKey = useOpenAIKey()
+  const isNewPrompt = useNewPrompt()
   const loading = ref(false)
   const content = ref('')
+  const contentCode = computed(() => content.value.split('\`\`\`vue')?.[1]?.replace('\`\`\`', '') ?? '')
 
-  async function handleSubmit() {
+  function handleInit(prompt: string, slug?: string | null) {
     loading.value = true
+    return $fetch<DBComponent>('/api/init', {
+      method: 'POST',
+      body: {
+        prompt,
+        slug,
+      },
+    })
+  }
 
-    const _body = typeof body === 'function' ? body() : body
+  async function handlePrompt(request: FetchRequest, body: Record<string, any>) {
+    loading.value = true
+    content.value = ''
+
     const completion = await $fetch<ReadableStream>(request, {
       method: 'POST',
-      body: _body,
+      body,
       responseType: 'stream',
       headers: {
         'x-openai-key': openaiKey.value,
@@ -42,10 +58,23 @@ export function usePrompt(request: FetchRequest, body: Record<string, any>) {
     await read()
   }
 
+  const handleCreate = (body: Record<string, any>) => {
+    isNewPrompt.value = false
+    return handlePrompt('/api/create', body)
+  }
+
+  const handleIterate = (body: Record<string, any>) => {
+    return handlePrompt('/api/iterate', body)
+  }
+
   return {
     loading,
     content,
-    handleSubmit,
+    contentCode,
+    isNewPrompt,
+    handleInit,
+    handleCreate,
+    handleIterate,
     onDone: fetchResult.on,
   }
 }
