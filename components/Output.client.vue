@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/one-component-per-file -->
 <script setup lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
 import { compileScript, parse } from '@vue/compiler-sfc'
@@ -12,7 +13,6 @@ const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
   if (!props.sfcString.includes(`<template>`)) {
-    // eslint-disable-next-line vue/one-component-per-file
     return defineComponent({
       template: '<div>Loading...</div>',
     })
@@ -22,7 +22,6 @@ const Comp = computed(() => {
   const template = parseTemplate(descriptor.template?.content ?? '')
   const script = compileScript(descriptor, { id: '123' })
   // console.log({ descriptor, script, template })
-  console.log({ template })
 
   const components = {}
   Object.entries(script.imports!).forEach(async ([key, value]) => {

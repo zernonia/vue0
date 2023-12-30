@@ -20,7 +20,7 @@ async function handleSubmit() {
   const basedOnResultId = selectedVersion.value?.id
   const result = await handleInit(prompt.value, selectedVersion.value?.slug)
 
-  data.value?.unshift(result)
+  data.value = [result, ...(data.value ?? [])]
   handleIterate({
     id: result.id,
     prompt: result.description,
