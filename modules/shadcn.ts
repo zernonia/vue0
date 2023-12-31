@@ -1,8 +1,11 @@
+import { readFileSync, readdirSync } from 'node:fs'
 import {
   addComponent,
+  addComponentsDir,
+  createResolver,
   defineNuxtModule,
-  tryResolveModule,
 } from 'nuxt/kit'
+import { parse, print } from 'recast'
 
 export interface ShadcnVueOptions {
   /**
@@ -31,64 +34,35 @@ export default defineNuxtModule<ShadcnVueOptions>({
       bridge: false,
     },
   },
-  hooks: {
-    // hooks option is can't be dynamic like setup section
-    'components:dirs': (dirs) => {
-      dirs.unshift({
-        path: '~/components/ui',
-        extensions: ['.vue'],
-        prefix: 'Ui',
-        pathPrefix: false,
+  async setup({ prefix, componentDir }) {
+    const { resolve } = createResolver('.')
+    const COMPONENT_DIR_PATH = componentDir!
+
+    addComponentsDir({
+      path: '~/components/ui',
+      extensions: [],
+    }, { prepend: true })
+
+    readdirSync(resolve(COMPONENT_DIR_PATH))
+      .forEach(async (dir) => {
+        const filePath = resolve(COMPONENT_DIR_PATH, dir, 'index.ts')
+        const content = readFileSync(filePath, { encoding: 'utf8' })
+        const ast = parse(content)
+
+        const exportedKeys: string[] = ast.program.body
+          // @ts-expect-error parse return any
+          .filter(node => node.type === 'ExportNamedDeclaration')
+          // @ts-expect-error parse return any
+          .flatMap(node => node.specifiers.map(specifier => specifier.exported.name))
+          .filter((key: string) => /^[A-Z]/.test(key))
+
+        exportedKeys.forEach((key) => {
+          addComponent({
+            name: `${prefix}${key}`, // name of the component to be used in vue templates
+            export: key, // (optional) if the component is a named (rather than default) export
+            filePath: resolve(filePath),
+          })
+        })
       })
-    },
-  },
-  async setup({ prefix }) {
-    // const isVeeValidateExist = await tryResolveModule('vee-validate')
-
-    // if (isVeeValidateExist !== undefined) {
-    //   addComponent({
-    //     filePath: 'vee-validate',
-    //     export: 'Form',
-    //     name: `${prefix}Form`,
-    //     priority: 999,
-    //   })
-
-    //   addComponent({
-    //     filePath: 'vee-validate',
-    //     export: 'Field',
-    //     name: `${prefix}FormField`,
-    //     priority: 999,
-    //   })
-    // }
-
-    addComponent({
-      filePath: 'radix-vue',
-      export: 'PaginationRoot',
-      name: `${prefix}Pagination`,
-      priority: 999,
-    })
-
-    addComponent({
-      filePath: 'radix-vue',
-      export: 'PaginationList',
-      name: `${prefix}PaginationList`,
-      priority: 999,
-    })
-
-    addComponent({
-      filePath: 'radix-vue',
-      export: 'PaginationListItem',
-      name: `${prefix}PaginationListItem`,
-      priority: 999,
-    })
   },
 })
-
-declare module '@nuxt/schema' {
-  interface NuxtConfig {
-    shadcn?: ShadcnVueOptions
-  }
-  interface NuxtOptions {
-    shadcn?: ShadcnVueOptions
-  }
-}
