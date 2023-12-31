@@ -97,10 +97,10 @@ const { copy, copied } = useClipboard()
       </div>
     </div>
 
-    <div class="mt-4 flex justify-center items-center w-full">
+    <div class="mt-4 flex justify-center items-center w-full gap-1">
       <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
-      <UiButton size="icon" class="p-2" :disabled="loading" @click="handleSubmit">
-        <SparklesIcon />
+      <UiButton size="icon" :disabled="loading || !prompt.length" @click="handleSubmit">
+        <SparklesIcon class="p-1" />
       </UiButton>
     </div>
   </div>

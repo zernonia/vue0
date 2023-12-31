@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const prompt = ref('Simple chat app')
+import { SparklesIcon } from 'lucide-vue-next'
+
+const prompt = ref('')
 
 const { data } = await useFetch<DBComponent[]>('/api/component/all')
 const { isNewPrompt, handleInit, loading } = usePrompt()
@@ -21,9 +23,9 @@ async function handleSubmit() {
 
       <UiCardContent>
         <div class="flex items-center gap-2">
-          <UiInput v-model="prompt" />
-          <UiButton :disabled="!prompt.length" @click="handleSubmit">
-            Send
+          <UiInput v-model="prompt" placeholder="A login page" :disabled="loading" />
+          <UiButton :disabled="!prompt.length" :loading="loading" size="icon" class="flex-shrink-0" @click="handleSubmit">
+            <SparklesIcon class="p-1" />
           </UiButton>
         </div>
       </UiCardContent>
