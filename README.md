@@ -8,6 +8,10 @@ Execution plan:
 - [x] Write iteration steps
 - [x] Store components in fs
 - [x] Render generated code
+- [ ] Support image upload (https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo)
+- [ ] Add user feature
+- [ ] Support fork components
+- [ ] Improve user feedback for iteration
 
 ## Credit
 - [openv0](https://github.com/raidendotai/openv0/)
