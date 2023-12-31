@@ -119,7 +119,7 @@ devDependencies:
     specifier: ^0.1.0
     version: 0.1.0
   shikiji:
-    specifier: ^0.9.14
+    specifier: ^0.9.15
     version: 0.9.15
   vue:
     specifier: ^3.3.12
