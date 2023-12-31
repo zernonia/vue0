@@ -1,7 +1,7 @@
-import { getDevBrowser, getProdBrowser } from '~/server/utils/browser'
+import { getProdBrowser } from '~/server/utils/browser'
 
 async function getScreenshot(url: string, ratio = 1) {
-  const browser = process.dev ? await getDevBrowser() : await getProdBrowser()
+  const browser = await getProdBrowser()
   const page = await browser.newPage()
   await page.goto(url, {
     waitUntil: 'domcontentloaded',
