@@ -11,6 +11,7 @@ export const components = sqliteTable('components', {
   description: text('description').notNull(),
   code: text('code'),
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).$default(() => new Date()),
+  userId: integer('user_id'),
   metadata: text('metadata', { mode: 'json' }),
   completed: integer('completed', { mode: 'boolean' }),
 })

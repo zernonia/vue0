@@ -1,0 +1,1 @@
+ALTER TABLE components ADD `user_id` integer;
