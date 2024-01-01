@@ -3,7 +3,7 @@ import { SparklesIcon } from 'lucide-vue-next'
 
 const prompt = ref('')
 
-const { data } = await useFetch<DBComponent[]>('/api/component/all')
+const { data } = useFetch<DBComponent[]>('/api/component/all')
 const { isNewPrompt, handleInit, loading } = usePrompt()
 
 async function handleSubmit() {
@@ -23,7 +23,7 @@ async function handleSubmit() {
 
       <UiCardContent>
         <div class="flex items-center gap-2">
-          <UiInput v-model="prompt" placeholder="A login page" :disabled="loading" />
+          <UiInput v-model="prompt" placeholder="A login page" :disabled="loading" @keyup.enter="handleSubmit" />
           <UiButton :disabled="!prompt.length" :loading="loading" size="icon" class="flex-shrink-0" @click="handleSubmit">
             <SparklesIcon class="p-1" />
           </UiButton>

@@ -24,6 +24,6 @@ withDefaults(defineProps<Props>(), {
     :disabled="loading || disabled"
   >
     <slot v-if="!loading" />
-    <Loader2 v-else class="p-1 animate-spin" />
+    <Loading v-else class="p-0.5" />
   </Primitive>
 </template>

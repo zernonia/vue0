@@ -49,5 +49,5 @@ const code = computed(() => highlighter.codeToHtml(props.sfcString, {
 </script>
 
 <template>
-  <div class="text-sm px-6 pb-6 absolute w-full overflow-y-auto h-full z-10 bg-primary text-primary-foreground" v-html="code" />
+  <div class="text-sm px-6 pb-6 absolute w-full overflow-y-auto h-full z-[100] bg-primary text-primary-foreground" v-html="code" />
 </template>

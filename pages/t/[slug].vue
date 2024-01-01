@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Clipboard, ClipboardCheck, Code2Icon, SparklesIcon } from 'lucide-vue-next'
+import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
 const slug = computed(() => route.params.slug)
 
+const { toast } = useToast()
 const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
@@ -31,6 +33,10 @@ async function handleSubmit() {
 onDone(() => {
   refresh()
   prompt.value = ''
+  toast({
+    title: 'Completed',
+    description: 'Latest generation is completed!',
+  })
 })
 
 onMounted(() => {
@@ -48,7 +54,7 @@ const { copy, copied } = useClipboard()
 </script>
 
 <template>
-  <div>
+  <div class="pb-8">
     <div class="flex w-full">
       <div class="flex-shrink-0 mt-2 w-64 mr-4">
         <h2 class="font-bold text-lg">
@@ -75,31 +81,32 @@ const { copy, copied } = useClipboard()
 
       <div class="flex-1 w-full">
         <div class="flex justify-end gap-2">
-          <UiButton variant="outline" @click="copy(selectedVersion?.code ?? '')">
+          <UiButton :loading="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
             <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
             <Clipboard v-else class="py-1 -ml-1 mr-1" />
             <span>{{ copied ? 'Copied' : 'Copy' }}</span>
           </UiButton>
-          <UiButton @click="isPreviewing = !isPreviewing">
+          <UiButton :loading="!sfcString" @click="isPreviewing = !isPreviewing">
             <Code2Icon class="py-1 -ml-1 mr-1" />
             <span>Preview</span>
           </UiButton>
         </div>
 
-        <div class="border mt-4 rounded-xl h-[80vh] w-full flex overflow-auto relative">
+        <div class="border mt-4 rounded-xl h-[80vh] w-full flex  relative">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
-          <div class="m-auto py-12">
+          <div class="m-auto overflow-auto h-full w-full ">
             <OutputWrapper>
               <LazyOutput v-if="sfcString" :sfc-string="sfcString" />
+              <Loading v-else size="lg" />
             </OutputWrapper>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="mt-4 flex justify-center items-center w-full gap-1">
+    <div class="mt-4 flex justify-center items-center w-full gap-2">
       <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
-      <UiButton size="icon" :disabled="loading || !prompt.length" @click="handleSubmit">
+      <UiButton size="icon" :disabled="loading || !prompt.length" :loading="loading" @click="handleSubmit">
         <SparklesIcon class="p-1" />
       </UiButton>
     </div>

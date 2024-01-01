@@ -12,16 +12,16 @@ const props = defineProps<{
 const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
-  if (!props.sfcString.includes(`<template>`)) {
+  const [_, templateString] = props?.sfcString?.split('<template>')
+  if (!templateString || !props.sfcString) {
     return defineComponent({
-      template: '<div>Loading...</div>',
+      template: '<div>Generating...</div>',
     })
   }
 
-  const { descriptor } = parse(props.sfcString)
-  const template = parseTemplate(descriptor.template?.content ?? '')
+  const { descriptor } = parse(props?.sfcString)
+  const template = parseTemplate(templateString ?? '')
   const script = compileScript(descriptor, { id: '123' })
-  // console.log({ descriptor, script, template })
 
   const components = {}
   Object.entries(script.imports!).forEach(async ([key, value]) => {
