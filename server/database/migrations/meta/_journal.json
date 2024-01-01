@@ -43,6 +43,13 @@
       "when": 1704119455476,
       "tag": "0009_slimy_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1704121485096,
+      "tag": "0010_remarkable_loki",
+      "breakpoints": true
     }
   ]
 }

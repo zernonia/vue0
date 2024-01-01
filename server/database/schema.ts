@@ -8,6 +8,7 @@ const createId = init({
 export const users = sqliteTable('users', {
   id: integer('id').notNull().primaryKey(),
   email: text('email').notNull(),
+  name: text('name'),
   avatarUrl: text('avatar_url'),
 })
 
