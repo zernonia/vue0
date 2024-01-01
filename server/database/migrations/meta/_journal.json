@@ -29,6 +29,20 @@
       "when": 1704118809231,
       "tag": "0006_secret_fallen_one",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1704119421052,
+      "tag": "0008_breezy_zarda",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1704119455476,
+      "tag": "0009_slimy_sunfire",
+      "breakpoints": true
     }
   ]
 }
