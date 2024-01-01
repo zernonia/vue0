@@ -8,6 +8,7 @@ export function useNewPrompt() {
 type FetchRequest = Parameters<typeof $fetch>[0]
 export function usePrompt() {
   const fetchResult = createEventHook<void>()
+  const fetchError = createEventHook<string>()
 
   const openaiKey = useOpenAIKey()
   const isNewPrompt = useNewPrompt()
@@ -23,6 +24,9 @@ export function usePrompt() {
         prompt,
         slug,
       },
+      headers: {
+        'x-openai-key': openaiKey.value,
+      },
     })
   }
 
@@ -30,32 +34,39 @@ export function usePrompt() {
     loading.value = true
     content.value = ''
 
-    const completion = await $fetch<ReadableStream>(request, {
-      method: 'POST',
-      body,
-      responseType: 'stream',
-      headers: {
-        'x-openai-key': openaiKey.value,
-      },
-    })
+    try {
+      const completion = await $fetch<ReadableStream>(request, {
+        method: 'POST',
+        body,
+        responseType: 'stream',
+        headers: {
+          'x-openai-key': openaiKey.value,
+        },
+      })
 
-    const reader = completion.getReader()
-    const decoder = new TextDecoder('utf-8')
+      const reader = completion.getReader()
+      const decoder = new TextDecoder('utf-8')
 
-    const read = async (): Promise<void> => {
-      const { done, value } = await reader.read()
-      if (done) {
-        console.log('release locked')
-        loading.value = false
-        fetchResult.trigger()
-        return reader.releaseLock()
+      const read = async (): Promise<void> => {
+        const { done, value } = await reader.read()
+        if (done) {
+          console.log('release locked')
+          loading.value = false
+          fetchResult.trigger()
+          return reader.releaseLock()
+        }
+
+        const chunk = decoder.decode(value, { stream: true })
+        content.value += chunk
+        return read()
       }
-
-      const chunk = decoder.decode(value, { stream: true })
-      content.value += chunk
-      return read()
+      await read()
     }
-    await read()
+    catch (err) {
+      console.log(err)
+      if (err instanceof Error)
+        fetchError.trigger(err.message)
+    }
   }
 
   const handleCreate = (body: Record<string, any>) => {
@@ -76,5 +87,6 @@ export function usePrompt() {
     handleCreate,
     handleIterate,
     onDone: fetchResult.on,
+    onError: fetchError.on,
   }
 }

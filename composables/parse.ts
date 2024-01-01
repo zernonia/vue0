@@ -5,7 +5,7 @@ import domSerializer from 'dom-serializer'
 export function parseTemplate(inputHTML: string) {
   const handler = new DomHandler()
   // Parse HTML
-  const parser = new Parser(handler, { lowerCaseTags: false, recognizeSelfClosing: true })
+  const parser = new Parser(handler, { xmlMode: true })
   parser.write(inputHTML)
   parser.end()
 
