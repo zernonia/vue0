@@ -52,6 +52,7 @@
     "eslint": "^8.56.0",
     "gray-matter": "^4.0.3",
     "nuxt": "^3.9.0",
+    "nuxt-auth-utils": "^0.0.13",
     "pathe": "^1.1.1",
     "recast": "^0.23.4",
     "scule": "^1.1.1",

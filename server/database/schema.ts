@@ -14,3 +14,9 @@ export const components = sqliteTable('components', {
   metadata: text('metadata', { mode: 'json' }),
   completed: integer('completed', { mode: 'boolean' }),
 })
+
+export const users = sqliteTable('users', {
+  id: integer('id').notNull().primaryKey(),
+  email: text('email').notNull(),
+  avatarUrl: text('avatar_url'),
+})
