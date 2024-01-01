@@ -6,7 +6,7 @@ const route = useRoute()
 const slug = computed(() => route.params.slug)
 
 const { toast } = useToast()
-const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
+const { data, refresh } = useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 watch(data, (n) => {
@@ -16,7 +16,7 @@ watch(data, (n) => {
 const prompt = ref('')
 const { loading, contentCode, onDone, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
 
-const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value)
+const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value ?? '')
 
 async function handleSubmit() {
   const basedOnResultId = selectedVersion.value?.id
@@ -92,12 +92,12 @@ const { copy, copied } = useClipboard()
           </UiButton>
         </div>
 
-        <div class="border mt-4 rounded-xl h-[80vh] w-full flex  relative">
+        <div class="border mt-4 rounded-xl h-[80vh] w-full flex relative">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <div class="m-auto overflow-auto h-full w-full ">
             <OutputWrapper>
               <LazyOutput v-if="sfcString" :sfc-string="sfcString" />
-              <Loading v-else size="lg" />
+              <Loading v-else size="lg" class="m-4" />
             </OutputWrapper>
           </div>
         </div>
