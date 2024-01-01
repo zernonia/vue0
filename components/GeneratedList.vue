@@ -5,18 +5,21 @@ defineProps<{
 </script>
 
 <template>
-  <div v-if="data?.length" class="w-full px-4 flex flex-col gap-8">
+  <div v-if="data?.length" class="w-full px-4 grid md:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
     <NuxtLink
       v-for="item in data"
       :key="item.id"
       :to="`/t/${item.slug}`"
     >
-      <UiCard class="py-12 shadow-none hover:shadow-lg hover:outline-primary outline-transparent outline outline-1 transition-all flex w-full h-full">
-        <UiCardContent class="m-auto">
+      <UiCard class="shadow-none hover:shadow-lg hover:outline-primary overflow-hidden outline-transparent outline outline-1 transition-all flex w-full h-[300px]">
+        <UiCardContent class="w-full h-full p-0 relative pointer-events-none">
           <OutputWrapper>
-            <LazyOutput v-if="item.code" :sfc-string="item.code" />
-            <div v-else>
-              Empty
+            <!-- TODO: Improve this is a wacky solution with better preview -->
+            <div class="scale-[0.9] md:scale-[calc(0.2925)] origin-top-left left-0 top-0 absolute w-screen h-screen">
+              <LazyOutput v-if="item.code" :sfc-string="item.code" />
+              <div v-else>
+                Empty
+              </div>
             </div>
           </OutputWrapper>
         </UiCardContent>
