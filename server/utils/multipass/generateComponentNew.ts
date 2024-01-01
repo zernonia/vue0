@@ -24,15 +24,14 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         + `If you judge it is relevant to do so, you can use library components and icons.\n\n`
         + `If the component is using imported component, dont overwrite the style for background color and text color.\n`
         + `You will write the full Vue component code, which should include all imports.`
-        + `The code should always start with <script setup lang="ts"> first, then only <template>`
-        + `Your generated code will be directly written to a .vue component file and used in production.`,
+        + `The code should always start with <script setup lang="ts"> first, then only <template>. Do not use additional <script></script>`
+        + `Your generated code will be directly written to a .vue component file and used in production. So make sure all keys are unique.`,
     },
     ...componentDesignContext,
     {
       role: `user`,
       content:
-        `- COMPONENT NAME : ${componentDesignTask.name}\n\n`
-        + `- COMPONENT DESCRIPTION :\n`
+        `- COMPONENT DESCRIPTION :\n`
         + `\`\`\`\n${componentDesignTask.description.user}\n\`\`\`\n\n`
         + `- additional component suggestions :\n`
         + `\`\`\`\n${componentDesignTask.description.llm}\n\`\`\`\n\n\n`
@@ -44,7 +43,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         + `- Tailwind classes should be written directly in the elements class tags. DO NOT WRITE ANY CSS OUTSIDE OF CLASSES. DO NOT USE ANY <style> IN THE CODE ! CLASSES STYLING ONLY !\n`
         + `- Do not use libraries or imports except what is provided in this task; otherwise it would crash the component because not installed. Do not import extra libraries besides what is provided above !\n`
         + `- DO NOT HAVE ANY DYNAMIC DATA OR DATA PROPS ! Components are meant to be working as is without supplying any variable to them when importing them ! Only write a component that render directly with placeholders as data, component not supplied with any dynamic data.\n`
-        + `- DO NOT HAVE ANY DYNAMIC DATA OR DATA PROPS ! `
+        + `- DO NOT HAVE ANY DYNAMIC DATA OR DATA PROPS OR defineProps ! `
         + `- Only write the code for the component; Do not write extra code to import it! The code will directly be stored in an individual .vue file !\n`
         + `Write the Vue component code as the creative genius and Vue component genius you are - with good ui formatting.\n`,
     },
