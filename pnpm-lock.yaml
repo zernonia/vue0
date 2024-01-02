@@ -112,15 +112,12 @@ devDependencies:
   pathe:
     specifier: ^1.1.1
     version: 1.1.1
-  recast:
-    specifier: ^0.23.4
-    version: 0.23.4
   scule:
     specifier: ^1.1.1
     version: 1.1.1
   shadcn-nuxt:
-    specifier: ^0.1.0
-    version: 0.1.0
+    specifier: ^0.8.6
+    version: 0.8.6
   shikiji:
     specifier: ^0.9.15
     version: 0.9.15
@@ -10769,10 +10766,11 @@ packages:
   /setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
 
-  /shadcn-nuxt@0.1.0:
-    resolution: {integrity: sha512-b7LtVHi8+RLwk9s7VgQkDe1TQ41MiqbRS1yE0AlFWXAiMBVqqZXX8OGuslixJuU0jxMpF8qH5Y3rxIzWrHka+g==}
+  /shadcn-nuxt@0.8.6:
+    resolution: {integrity: sha512-jEq1CgBH7xh/M8BjxLhhFhPiAMhsUC9oWHghmPKezFMd6Zdta7fxb9SKcRbiJEcWvtw58O+nFSwwCIH5IfG4FQ==}
     dependencies:
       '@nuxt/kit': 3.9.0
+      recast: 0.23.4
       ts-morph: 19.0.0
     transitivePeerDependencies:
       - rollup
