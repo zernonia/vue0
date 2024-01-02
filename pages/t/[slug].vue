@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Clipboard, ClipboardCheck, Code2Icon, SparklesIcon } from 'lucide-vue-next'
+import { Clipboard, ClipboardCheck, Code2Icon, GitBranch, SparklesIcon } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
-const slug = computed(() => route.params.slug)
+const slug = computed(() => route.params.slug.toString())
 
 const { toast } = useToast()
 const { data, refresh } = useFetch<DBComponent[]>(`/api/component/${slug.value}`)
-const user = computed(() => data.value?.[0].user)
+const user = computed(() => data.value?.[0]?.user)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 watch(data, (n) => {
@@ -52,6 +52,28 @@ onMounted(() => {
 
 const isPreviewing = ref(false)
 const { copy, copied } = useClipboard()
+
+const isForking = ref(false)
+async function handleFork() {
+  isForking.value = true
+  try {
+    const result = await $fetch<DBComponent>('/api/component/fork', {
+      method: 'POST',
+      body: {
+        id: selectedVersion.value?.id,
+        slug: slug.value,
+      },
+    })
+    if (result.id)
+      navigateTo(`/t/${result.slug}`)
+  }
+  catch (err) {
+    console.log(err)
+  }
+  finally {
+    isForking.value = false
+  }
+}
 </script>
 
 <template>
@@ -93,7 +115,13 @@ const { copy, copied } = useClipboard()
           </div>
 
           <div class="flex items-center gap-2">
-            <UiButton :loading="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
+            <UiButton
+              :disabled="!sfcString" :loading="isForking" variant="outline" @click="handleFork"
+            >
+              <GitBranch class="py-1 -ml-1 mr-1" />
+              <span>Fork</span>
+            </UiButton>
+            <UiButton :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
               <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
               <Clipboard v-else class="py-1 -ml-1 mr-1" />
               <span>{{ copied ? 'Copied' : 'Copy' }}</span>
