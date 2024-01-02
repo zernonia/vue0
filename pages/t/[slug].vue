@@ -7,6 +7,7 @@ const slug = computed(() => route.params.slug)
 
 const { toast } = useToast()
 const { data, refresh } = useFetch<DBComponent[]>(`/api/component/${slug.value}`)
+const user = computed(() => data.value?.[0].user)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 watch(data, (n) => {
@@ -80,19 +81,31 @@ const { copy, copied } = useClipboard()
       </div>
 
       <div class="flex-1 w-full">
-        <div class="flex justify-end gap-2">
-          <UiButton :loading="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
-            <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
-            <Clipboard v-else class="py-1 -ml-1 mr-1" />
-            <span>{{ copied ? 'Copied' : 'Copy' }}</span>
-          </UiButton>
-          <UiButton :loading="!sfcString" @click="isPreviewing = !isPreviewing">
-            <Code2Icon class="py-1 -ml-1 mr-1" />
-            <span>Preview</span>
-          </UiButton>
+        <div class="flex justify-between">
+          <div class="flex items-center gap-2">
+            <UiAvatar class="w-9 h-9">
+              <UiAvatarImage :src="user?.avatarUrl ?? ''" />
+              <UiAvatarFallback>{{ user?.name?.slice(0, 1) }}</UiAvatarFallback>
+            </UiAvatar>
+            <div class="text-sm max-w-64 text-ellipsis whitespace-nowrap overflow-hidden">
+              {{ selectedVersion?.description }}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <UiButton :loading="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
+              <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
+              <Clipboard v-else class="py-1 -ml-1 mr-1" />
+              <span>{{ copied ? 'Copied' : 'Copy' }}</span>
+            </UiButton>
+            <UiButton :loading="!sfcString" @click="isPreviewing = !isPreviewing">
+              <Code2Icon class="py-1 -ml-1 mr-1" />
+              <span>Preview</span>
+            </UiButton>
+          </div>
         </div>
 
-        <div class="border mt-4 rounded-xl h-[80vh] w-full flex relative">
+        <div class="border mt-4 rounded-xl overflow-hidden h-[80vh] w-full flex relative">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <div class="m-auto overflow-auto h-full w-full ">
             <OutputWrapper>

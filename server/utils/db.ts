@@ -7,7 +7,9 @@ import { drizzle as drizzleLibSQL } from 'drizzle-orm/libsql'
 import { join } from 'pathe'
 
 export * as tables from '~/server/database/schema'
-export type DBComponent = typeof tables.components.$inferSelect
+export type DBComponent = typeof tables.components.$inferSelect & {
+  user: typeof tables.users.$inferSelect
+}
 
 let _db: BetterSQLite3Database | LibSQLDatabase | null = null
 

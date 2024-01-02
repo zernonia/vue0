@@ -24,6 +24,23 @@ defineProps<{
           </OutputWrapper>
         </UiCardContent>
       </UiCard>
+      <UiTooltip>
+        <div class="px-4 py-2 flex gap-2 items-center w-full">
+          <UiAvatar class="w-6 h-6 flex-shrink-0">
+            <UiAvatarImage :src="item?.user?.avatarUrl ?? ''" />
+            <UiAvatarFallback>{{ item?.user?.name?.slice(0, 1) }}</UiAvatarFallback>
+          </UiAvatar>
+          <UiTooltipTrigger as="div">
+            <p class="text-sm line-clamp-1 overflow-hidden">
+              {{ item.description }}
+            </p>
+          </UiTooltipTrigger>
+
+          <UiTooltipContent class="max-w-64 text-sm">
+            {{ item.description }}
+          </UiTooltipContent>
+        </div>
+      </UiTooltip>
     </NuxtLink>
   </div>
 </template>
