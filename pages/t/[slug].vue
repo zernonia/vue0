@@ -6,7 +6,7 @@ const route = useRoute()
 const slug = computed(() => route.params.slug.toString())
 
 const { toast } = useToast()
-const { data, refresh } = useFetch<DBComponent[]>(`/api/component/${slug.value}`)
+const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const user = computed(() => data.value?.[0]?.user)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 

@@ -8,6 +8,7 @@ useHead({
 
 <template>
   <UiTooltipProvider>
+    <NuxtLoadingIndicator color="hsl(var(--primary))" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
