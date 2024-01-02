@@ -1,7 +1,12 @@
 import { eq } from 'drizzle-orm'
+import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { id, basedOnResultId } = await validateIterateBody(event)
+  const { id, basedOnResultId } = await validateBody(event, z.object({
+    id: z.string(),
+    prompt: z.string(),
+    basedOnResultId: z.string(),
+  }).safeParse)
   const { components } = tables
   const result = await useDB().select().from(components).where(eq(components.id, basedOnResultId))
   const previousResult = result?.[0]

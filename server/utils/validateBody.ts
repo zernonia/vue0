@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import type { z } from 'zod'
 import type { EventHandlerRequest, H3Event, ValidateFunction } from 'h3'
 import { readValidatedBody } from 'h3'
 import type { UserSession } from '#auth-utils'
@@ -27,38 +27,5 @@ export async function validateUser(event: H3Event<EventHandlerRequest>) {
   }
   else {
     return session.user as UserSession
-  }
-}
-
-export async function validateCreateBody(event: H3Event<EventHandlerRequest>) {
-  const result = await readValidatedBody(event, z.object({
-    id: z.string(),
-    prompt: z.string(),
-  }).safeParse)
-
-  if (result.success) { return result.data }
-
-  else {
-    throw createError({
-      statusCode: 400,
-      statusMessage: result.error.message,
-    })
-  }
-}
-
-export async function validateIterateBody(event: H3Event<EventHandlerRequest>) {
-  const result = await readValidatedBody(event, z.object({
-    id: z.string(),
-    prompt: z.string(),
-    basedOnResultId: z.string(),
-  }).safeParse)
-
-  if (result.success) { return result.data }
-
-  else {
-    throw createError({
-      statusCode: 400,
-      statusMessage: result.error.message,
-    })
   }
 }
