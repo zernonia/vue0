@@ -11,8 +11,11 @@ Execution plan:
 - [ ] Support image upload (https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo)
 - [x] Add user feature
 - [x] Support fork components
+- [x] Screen capture generated componet
+- [x] Simple Meta
 - [ ] Improve user feedback for iteration
 - [ ] Allow local hosting with GitHub OAuth
+- [ ] Improve caching
 
 ## Credit
 - [openv0](https://github.com/raidendotai/openv0/)
