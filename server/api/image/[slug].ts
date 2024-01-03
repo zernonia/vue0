@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const getBrowser = () =>
     IS_PRODUCTION
-      ? connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}` })
+      ? connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}&--window-size=1280,720` })
       : launch({
         args: [
           '--autoplay-policy=user-gesture-required',
@@ -58,16 +58,10 @@ export default defineEventHandler(async (event) => {
         headless: true,
       })
 
+  const browser = await getBrowser()
   try {
-    const browser = await getBrowser()
-
     const page = await browser.newPage()
-    try {
-      await page.goto(url, { waitUntil: 'networkidle2' })
-    }
-    catch (error) {
-      console.log('Error', error)
-    }
+    await page.goto(url, { waitUntil: 'networkidle2' })
 
     await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
     const buffer = await page.screenshot()
@@ -79,6 +73,7 @@ export default defineEventHandler(async (event) => {
     return buffer
   }
   catch (err) {
+    await browser.close()
     if (err instanceof Error)
       return createError(err)
   }
