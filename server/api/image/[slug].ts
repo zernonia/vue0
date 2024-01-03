@@ -59,23 +59,30 @@ export default defineEventHandler(async (event) => {
       })
 
   const browser = await getBrowser()
-  try {
-    const page = await browser.newPage()
-    await page.goto(url, { waitUntil: 'networkidle2' })
-    console.log({ browser, page })
 
-    await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
-    const buffer = await page.screenshot()
-    await browser.close()
-    setHeaders(event, {
-      'Content-Type': 'image/png',
-    })
+  return {
+    url,
+    browser,
+    requestURL,
+    slug,
+  }
+  // try {
+  //   const page = await browser.newPage()
+  //   await page.goto(url, { waitUntil: 'networkidle2' })
+  //   console.log({ browser, page })
 
-    return buffer
-  }
-  catch (err) {
-    await browser.close()
-    if (err instanceof Error)
-      return createError(err)
-  }
+  //   await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
+  //   const buffer = await page.screenshot()
+  //   await browser.close()
+  //   setHeaders(event, {
+  //     'Content-Type': 'image/png',
+  //   })
+
+  //   return buffer
+  // }
+  // catch (err) {
+  //   await browser.close()
+  //   if (err instanceof Error)
+  //     return createError(err)
+  // }
 })
