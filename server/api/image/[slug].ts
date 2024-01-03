@@ -8,14 +8,14 @@ const chromeExecutables = {
 
 export default defineEventHandler(async (event) => {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production'
-  console.log(getRequestURL(event))
-  console.log(event.node.req.headers)
+
   const slug = event.context.params?.slug ?? ''
   const url = IS_PRODUCTION ? `https://www.vue0.dev/p/${slug}` : `http://localhost:3000/p/${slug}`
+  const browserlessApiKey = useRuntimeConfig().browserlessApiKey
 
   const getBrowser = () =>
     IS_PRODUCTION
-      ? connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}&--window-size=1280,720` })
+      ? connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessApiKey}&--window-size=1280,720` })
       : launch({
         args: [
           '--autoplay-policy=user-gesture-required',

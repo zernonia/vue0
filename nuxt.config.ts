@@ -1,11 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  // temporary set to `false` so that image generation doesn't show devtools
+  devtools: { enabled: false },
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', 'shadcn-nuxt', '@nuxtjs/google-fonts', 'nuxt-auth-utils'],
   shadcn: {
     prefix: 'Ui',
   },
   runtimeConfig: {
+    browserlessApiKey: '',
     github: {
       clientId: '',
       clientSecret: '',

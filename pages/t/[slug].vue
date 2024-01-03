@@ -10,14 +10,29 @@ const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.v
 const user = computed(() => data.value?.[0]?.user)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
+const iframeRef = ref<HTMLIFrameElement>()
+
 watch(data, (n) => {
-  selectedVersion.value = n?.[0]
+  const item = n?.[0]
+  selectedVersion.value = item
+  sendDataToIframe(item?.code ?? '')
 }, { immediate: true })
 
 const prompt = ref('')
-const { loading, contentCode, onDone, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
+const { loading, contentCode, onDone, onStream, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
 
 const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value ?? '')
+
+function sendDataToIframe(data: string) {
+  const channel = new MessageChannel()
+  if (iframeRef.value)
+    iframeRef.value.contentWindow?.postMessage({ from: 'vue0', data }, '*', [channel.port2])
+}
+
+function handleChangeVersion(version: DBComponent) {
+  selectedVersion.value = version
+  sendDataToIframe(version.code!)
+}
 
 async function handleSubmit() {
   const basedOnResultId = selectedVersion.value?.id
@@ -30,6 +45,8 @@ async function handleSubmit() {
     basedOnResultId,
   })
 }
+
+onStream(sendDataToIframe)
 
 onDone(() => {
   refresh()
@@ -90,7 +107,7 @@ async function handleFork() {
             class="text-left overflow-hidden h-auto justify-start outline-1 text-gray-400 hover:text-primary"
             :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
             variant="secondary"
-            @click="selectedVersion = version"
+            @click="handleChangeVersion(version)"
           >
             <div>
               <UiBadge variant="outline" class="bg-white">
@@ -135,16 +152,17 @@ async function handleFork() {
 
         <div class="border mt-4 rounded-xl overflow-hidden h-[80vh] w-full flex relative">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
-          <div class="m-auto overflow-auto h-full w-full ">
+          <iframe ref="iframeRef" :src="`/p/${slug}`" class="w-full h-full" />
+          <!-- <div class="m-auto overflow-auto h-full w-full ">
             <OutputWrapper>
               <LazyOutput v-if="sfcString" :sfc-string="sfcString" />
               <Loading v-else size="lg" class="m-4" />
             </OutputWrapper>
           </div>
+        </div> -->
         </div>
       </div>
     </div>
-
     <div class="mt-4 flex justify-center items-center w-full gap-2">
       <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
       <UiButton size="icon" :disabled="loading || !prompt.length" :loading="loading" @click="handleSubmit">

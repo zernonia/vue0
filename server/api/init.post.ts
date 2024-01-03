@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
     slug: z.string().optional(),
     prompt: z.string(),
   }).safeParse)
+  const user = await validateUser(event)
 
   if (result.success) {
     const { slug, prompt } = result.data
@@ -13,6 +14,7 @@ export default defineEventHandler(async (event) => {
     return useDB().insert(tables.components).values({
       slug,
       description: prompt,
+      userId: user.id,
     }).returning().get()
   }
   else {

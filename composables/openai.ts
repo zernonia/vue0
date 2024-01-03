@@ -9,6 +9,7 @@ type FetchRequest = Parameters<typeof $fetch>[0]
 export function usePrompt() {
   const fetchResult = createEventHook<void>()
   const fetchError = createEventHook<string>()
+  const fetchStream = createEventHook<string>()
 
   const openaiKey = useOpenAIKey()
   const isNewPrompt = useNewPrompt()
@@ -58,6 +59,7 @@ export function usePrompt() {
 
         const chunk = decoder.decode(value, { stream: true })
         content.value += chunk
+        fetchStream.trigger(content.value)
         return read()
       }
       await read()
@@ -88,5 +90,6 @@ export function usePrompt() {
     handleIterate,
     onDone: fetchResult.on,
     onError: fetchError.on,
+    onStream: fetchStream.on,
   }
 }
