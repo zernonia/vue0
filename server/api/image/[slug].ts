@@ -62,6 +62,7 @@ export default defineEventHandler(async (event) => {
   try {
     const page = await browser.newPage()
     await page.goto(url, { waitUntil: 'networkidle2' })
+    console.log({ browser, page })
 
     await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
     const buffer = await page.screenshot()
