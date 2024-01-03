@@ -1,17 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // temporary set to `false` so that image generation doesn't show devtools
+  // devtools totally broken, not sure why
   devtools: { enabled: false },
-  modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', 'shadcn-nuxt', '@nuxtjs/google-fonts', 'nuxt-auth-utils'],
-  shadcn: {
-    prefix: 'Ui',
-  },
   app: {
     head: {
       link: [{ rel: 'icon', type: 'image/svg', href: '/logo.svg' }],
+
     },
   },
   runtimeConfig: {
+    public: {
+      siteUrl: '',
+    },
     browserlessApiKey: '',
     github: {
       clientId: '',
@@ -21,6 +21,23 @@ export default defineNuxtConfig({
       name: 'nuxt-session',
       password: '',
     },
+  },
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@vueuse/nuxt',
+    'shadcn-nuxt',
+    '@nuxtjs/google-fonts',
+    'nuxt-auth-utils',
+    '@nuxtseo/module',
+  ],
+  shadcn: {
+    prefix: 'Ui',
+  },
+  tailwindcss: {
+    viewer: false,
+  },
+  ogImage: {
+    debug: true,
   },
   hooks: {
     'vite:extendConfig': (config, { isClient }) => {
@@ -41,7 +58,12 @@ export default defineNuxtConfig({
       Inter: '400..800',
     },
   },
-  routeRules: {
-    '/api/image/**': { cache: { maxAge: 31536000 } },
+  site: {
+    name: 'vue0',
+    description: 'Generate Component with simple text prompts.',
+    defaultLocale: 'en',
   },
+  // routeRules: {
+  //   '/api/image/**': { cache: { maxAge: 31536000 } },
+  // },
 })

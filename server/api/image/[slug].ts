@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
   const slug = event.context.params?.slug ?? ''
-  const url = IS_PRODUCTION ? `https://www.vue0.dev/p/${slug}` : `http://localhost:3000/p/${slug}`
+  const url = IS_PRODUCTION ? `${useRuntimeConfig().public.siteUrl}/p/${slug}` : `http://localhost:3000/p/${slug}`
   const browserlessApiKey = useRuntimeConfig().browserlessApiKey
 
   const getBrowser = () =>
@@ -28,10 +28,12 @@ export default defineEventHandler(async (event) => {
     await page.goto(url, { waitUntil: 'networkidle2' })
 
     await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
-    const buffer = await page.screenshot()
+    const buffer = await page.screenshot({
+      type: 'jpeg',
+    })
     await browser.close()
     setHeaders(event, {
-      'Content-Type': 'image/png',
+      'Content-Type': 'image/jpeg',
     })
 
     return buffer

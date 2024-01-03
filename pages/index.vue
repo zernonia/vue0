@@ -12,6 +12,10 @@ async function handleSubmit() {
   const result = await handleInit(prompt.value)
   await navigateTo(`/t/${result.slug}`)
 }
+
+useSeoMeta({
+  ogImage: `${useRuntimeConfig().public.siteUrl}/og.png`,
+})
 </script>
 
 <template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { upperFirst } from 'scule'
 import { Clipboard, ClipboardCheck, Code2Icon, GitBranch, SparklesIcon } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
@@ -92,6 +93,21 @@ async function handleFork() {
     isForking.value = false
   }
 }
+
+const componentDescription = computed(() => upperFirst(data.value?.at(-1)?.description ?? ''))
+
+// Page meta section
+useHead({
+  title() {
+    return componentDescription.value
+  },
+})
+defineOgImageComponent('Generated', {
+  title: componentDescription.value,
+  avatarUrl: dataUser.value?.avatarUrl,
+  imageUrl: `${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`,
+})
+console.log(`${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`)
 </script>
 
 <template>
@@ -128,7 +144,7 @@ async function handleFork() {
               <UiAvatarFallback>{{ dataUser.name?.slice(0, 1) }}</UiAvatarFallback>
             </UiAvatar>
             <div class="text-sm max-w-64 text-ellipsis whitespace-nowrap overflow-hidden">
-              {{ selectedVersion?.description }}
+              {{ componentDescription }}
             </div>
           </div>
 
@@ -157,7 +173,7 @@ async function handleFork() {
         </div>
       </div>
     </div>
-    <div v-if="user.id === dataUser?.id" class="mt-4 flex justify-center items-center w-full gap-2">
+    <div v-if="user?.id === dataUser?.id" class="mt-4 flex justify-center items-center w-full gap-2">
       <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
       <UiButton size="icon" :disabled="loading || !prompt.length" :loading="loading" @click="handleSubmit">
         <SparklesIcon class="p-1" />
