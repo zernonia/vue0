@@ -34,4 +34,7 @@ export default defineNuxtConfig({
       Inter: '400..800',
     },
   },
+  routeRules: {
+    '/api/image/**': { cache: { maxAge: 31536000 } },
+  },
 })

@@ -11,17 +11,11 @@ defineProps<{
       :key="item.id"
       :to="`/t/${item.slug}`"
     >
-      <UiCard class="shadow-none hover:shadow-lg hover:outline-primary overflow-hidden outline-transparent outline outline-1 transition-all flex w-full h-[300px]">
-        <UiCardContent class="w-full h-full p-0 relative pointer-events-none">
-          <OutputWrapper>
-            <!-- TODO: Improve this is a wacky solution with better preview -->
-            <div class="scale-[0.9] md:scale-[calc(0.2925)] origin-top-left left-0 top-0 absolute w-screen h-screen">
-              <LazyOutput v-if="item.code" :sfc-string="item.code" />
-              <div v-else>
-                Empty
-              </div>
-            </div>
-          </OutputWrapper>
+      <UiCard class="shadow-none hover:shadow-lg hover:outline-primary overflow-hidden outline-transparent outline outline-1 transition-all flex">
+        <UiCardContent class="w-full h-full p-0">
+          <UiAspectRatio :ratio="16 / 9">
+            <img :src="`/api/image/${item.slug}`" class="w-full h-full object-cover">
+          </UiAspectRatio>
         </UiCardContent>
       </UiCard>
       <UiTooltip>

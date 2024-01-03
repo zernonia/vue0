@@ -54,6 +54,7 @@
     "nuxt": "^3.9.0",
     "nuxt-auth-utils": "^0.0.13",
     "pathe": "^1.1.1",
+    "puppeteer-core": "^21.6.1",
     "scule": "^1.1.1",
     "shadcn-nuxt": "^0.8.6",
     "shikiji": "^0.9.15",
