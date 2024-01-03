@@ -63,7 +63,7 @@ export default defineNuxtConfig({
     description: 'Generate Component with simple text prompts.',
     defaultLocale: 'en',
   },
-  // routeRules: {
-  //   '/api/image/**': { cache: { maxAge: 31536000 } },
-  // },
+  routeRules: {
+    '/api/image/**': { cache: { maxAge: 31536000 } },
+  },
 })
