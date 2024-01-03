@@ -8,9 +8,10 @@ const chromeExecutables = {
 
 export default defineEventHandler(async (event) => {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production'
-
+  console.log(getRequestURL(event))
+  console.log(event.node.req.headers)
   const slug = event.context.params?.slug ?? ''
-  const url = IS_PRODUCTION ? `http://localhost:3000/p/${slug}` : `https://www.vue0.dev/p/${slug}`
+  const url = IS_PRODUCTION ? `https://www.vue0.dev/p/${slug}` : `http://localhost:3000/p/${slug}`
 
   const getBrowser = () =>
     IS_PRODUCTION
