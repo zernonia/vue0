@@ -10,8 +10,7 @@ export default defineEventHandler(async (event) => {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
   const slug = event.context.params?.slug ?? ''
-  const requestURL = getRequestURL(event)
-  const url = requestURL.hostname === 'localhost' ? `http://localhost:3000/p/${slug}` : `${requestURL.origin}/p/${slug}`
+  const url = IS_PRODUCTION ? `http://localhost:3000/p/${slug}` : `https://www.vue0.dev/p/${slug}`
 
   const getBrowser = () =>
     IS_PRODUCTION
@@ -60,29 +59,22 @@ export default defineEventHandler(async (event) => {
 
   const browser = await getBrowser()
 
-  return {
-    url,
-    browser,
-    requestURL,
-    slug,
+  try {
+    const page = await browser.newPage()
+    await page.goto(url, { waitUntil: 'networkidle2' })
+
+    await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
+    const buffer = await page.screenshot()
+    await browser.close()
+    setHeaders(event, {
+      'Content-Type': 'image/png',
+    })
+
+    return buffer
   }
-  // try {
-  //   const page = await browser.newPage()
-  //   await page.goto(url, { waitUntil: 'networkidle2' })
-  //   console.log({ browser, page })
-
-  //   await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 0.5 })
-  //   const buffer = await page.screenshot()
-  //   await browser.close()
-  //   setHeaders(event, {
-  //     'Content-Type': 'image/png',
-  //   })
-
-  //   return buffer
-  // }
-  // catch (err) {
-  //   await browser.close()
-  //   if (err instanceof Error)
-  //     return createError(err)
-  // }
+  catch (err) {
+    await browser.close()
+    if (err instanceof Error)
+      return createError(err)
+  }
 })
