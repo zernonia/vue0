@@ -6,8 +6,9 @@ import { GithubLogoIcon } from '@radix-icons/vue'
   <div>
     <div class=" w-full h-full flex flex-col items-center justify-center ">
       <header class="sticky top-0 flex p-4 w-full z-10">
-        <NuxtLink to="/" class="font-bold text-2xl ">
-          vue0
+        <NuxtLink to="/" class="group h-10 flex items-center gap-1 text-3xl font-black">
+          <Logo />
+          <span>vue0</span>
         </NuxtLink>
 
         <div class="mx-auto" />

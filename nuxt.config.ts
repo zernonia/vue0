@@ -6,6 +6,11 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: 'Ui',
   },
+  app: {
+    head: {
+      link: [{ rel: 'icon', type: 'image/svg', href: '/logo.svg' }],
+    },
+  },
   runtimeConfig: {
     browserlessApiKey: '',
     github: {

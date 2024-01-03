@@ -7,7 +7,8 @@ const slug = computed(() => route.params.slug.toString())
 
 const { toast } = useToast()
 const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
-const user = computed(() => data.value?.[0]?.user)
+const { user } = useUserSession()
+const dataUser = computed(() => data.value?.[0]?.user)
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 const iframeRef = ref<HTMLIFrameElement>()
@@ -122,9 +123,9 @@ async function handleFork() {
       <div class="flex-1 w-full">
         <div class="flex justify-between">
           <div class="flex items-center gap-2">
-            <UiAvatar class="w-9 h-9">
-              <UiAvatarImage :src="user?.avatarUrl ?? ''" />
-              <UiAvatarFallback>{{ user?.name?.slice(0, 1) }}</UiAvatarFallback>
+            <UiAvatar v-if="dataUser" class="w-9 h-9">
+              <UiAvatarImage :src="dataUser.avatarUrl ?? ''" />
+              <UiAvatarFallback>{{ dataUser.name?.slice(0, 1) }}</UiAvatarFallback>
             </UiAvatar>
             <div class="text-sm max-w-64 text-ellipsis whitespace-nowrap overflow-hidden">
               {{ selectedVersion?.description }}
@@ -153,17 +154,10 @@ async function handleFork() {
         <div class="border mt-4 rounded-xl overflow-hidden h-[80vh] w-full flex relative">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <iframe ref="iframeRef" :src="`/p/${slug}`" class="w-full h-full" />
-          <!-- <div class="m-auto overflow-auto h-full w-full ">
-            <OutputWrapper>
-              <LazyOutput v-if="sfcString" :sfc-string="sfcString" />
-              <Loading v-else size="lg" class="m-4" />
-            </OutputWrapper>
-          </div>
-        </div> -->
         </div>
       </div>
     </div>
-    <div class="mt-4 flex justify-center items-center w-full gap-2">
+    <div v-if="user.id === dataUser?.id" class="mt-4 flex justify-center items-center w-full gap-2">
       <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
       <UiButton size="icon" :disabled="loading || !prompt.length" :loading="loading" @click="handleSubmit">
         <SparklesIcon class="p-1" />
