@@ -11,6 +11,7 @@ export default defineEventHandler(async (_event) => {
     })
     .from(components)
     .leftJoin(users, eq(components.userId, users.id))
+    .where(eq(components.completed, true))
     .orderBy(desc(components.createdAt))
     .groupBy(components.slug)
     .all()
