@@ -30,6 +30,10 @@ useMagicKeys({
     }
   },
 })
+
+function handleSubmit() {
+  emits('submit', input.value)
+}
 </script>
 
 <template>
@@ -39,12 +43,12 @@ useMagicKeys({
       v-model="input"
       class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium w-96 bg-transparent px-1"
       :placeholder="`${placeholder}.   (Press ‘/‘ to type)`"
-      @keyup.ctrl.enter="emits('submit', input)"
-      @keydown.meta.enter="emits('submit', input)"
+      @keyup.ctrl.enter="handleSubmit"
+      @keydown.meta.enter="handleSubmit"
     />
     <UiTooltip :delay-duration="100">
       <UiTooltipTrigger as-child>
-        <UiButton size="icon" class="ml-4 mb-0.5 p-0 w-6 h-6 rounded" variant="ghost" :loading="loading" :disabled="loading || !input?.length" @click="emits('submit', input)">
+        <UiButton size="icon" class="ml-4 mb-0.5 p-0 w-6 h-6 rounded" variant="ghost" :loading="loading" :disabled="loading || !input?.length" @click="handleSubmit">
           <SparklesIcon class="p-0.5" />
         </UiButton>
       </UiTooltipTrigger>
