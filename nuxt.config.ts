@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     'nuxt-auth-utils',
     '@nuxtseo/module',
+    '@nuxt/content',
   ],
   shadcn: {
     prefix: 'Ui',
