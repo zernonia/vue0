@@ -34,6 +34,7 @@ export default defineEventHandler(async (event) => {
     await browser.close()
     setHeaders(event, {
       'Content-Type': 'image/jpeg',
+      'Cache-Control': 'max-age=604800, public',
     })
 
     return buffer
