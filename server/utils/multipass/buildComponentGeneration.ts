@@ -64,7 +64,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
       + `Suggested usage : ${component.usage}\n\n\n`
       + `# examples of how ${component.name} can be used inside the new component:\n${examplesBlock}`
       + `\n\nIcon elements can optionally be used when making the Vue component\n`
-      + `Example for using 'lucide-vue-next\n`
+      + `Example for using 'lucide-vue-next' (Only use icon from the library) \n`
       + `\`\`\`1. ArrowRight\n2. Check\n3. Home\n4. User\n5. Search`
       + `\`\`\``,
     } satisfies OpenAI.ChatCompletionMessageParam
