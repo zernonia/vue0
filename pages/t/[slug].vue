@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, Share, Trash } from 'lucide-vue-next'
+import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, Share, Trash, Trash2 } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
@@ -10,6 +10,8 @@ const { toast } = useToast()
 const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const { user } = useUserSession()
 const dataUser = computed(() => data.value?.[0]?.user)
+const isUserCreator = computed(() => dataUser.value?.id === user.value?.id)
+
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
 
 const iframeRef = ref<HTMLIFrameElement>()
@@ -69,6 +71,7 @@ onMounted(() => {
   }
 })
 
+const dropdownOpen = ref(false)
 const isPreviewing = ref(false)
 const { copy, copied } = useClipboard()
 const { copy: copyLink } = useClipboard()
@@ -99,8 +102,29 @@ async function handleFork() {
   }
 }
 
-function handleDelete() {
-  // write delete function
+const isDeleting = ref(false)
+async function handleDelete(all = false) {
+  isDeleting.value = true
+  const body = all ? { slug: slug.value, id: selectedVersion.value?.id } : { id: selectedVersion.value?.id }
+  try {
+    const result = await $fetch<DBComponent>('/api/component/delete', {
+      method: 'POST',
+      body,
+    })
+    if (result) {
+      if (all)
+        await navigateTo('/')
+      else
+        await refresh()
+    }
+  }
+  catch (err) {
+    console.log(err)
+  }
+  finally {
+    isDeleting.value = false
+    dropdownOpen.value = false
+  }
 }
 
 const componentDescription = computed(() => upperFirst(data.value?.at(-1)?.description ?? ''))
@@ -163,7 +187,7 @@ defineOgImageComponent('Generated', {
           </div>
 
           <div class="flex items-center gap-2">
-            <UiDropdownMenu>
+            <UiDropdownMenu v-model:open="dropdownOpen">
               <UiDropdownMenuTrigger as-child>
                 <UiButton
                   size="icon"
@@ -183,12 +207,50 @@ defineOgImageComponent('Generated', {
                   <span>Share</span>
                 </UiDropdownMenuItem>
 
-                <UiDropdownMenuSeparator />
+                <template v-if="isUserCreator">
+                  <UiDropdownMenuSeparator />
+                  <DialogDelete
+                    v-if="selectedVersion?.id !== data?.at(-1)?.id"
+                    title="Are you sure you want to delete this version?"
+                    description="This will delete the current selected version. This action cannot be undone."
+                  >
+                    <UiDropdownMenuItem class="!text-destructive" @select.prevent>
+                      <Trash class="py-1 mr-1" />
+                      <span>Delete Version</span>
+                    </UiDropdownMenuItem>
 
-                <UiDropdownMenuItem class="text-destructive hover:!text-destructive" @click="handleDelete">
-                  <Trash class="py-1 mr-1" />
-                  <span>Delete</span>
-                </UiDropdownMenuItem>
+                    <template #footer>
+                      <UiAlertDialogCancel :disabled="isDeleting">
+                        Cancel
+                      </UiAlertDialogCancel>
+                      <UiAlertDialogAction as-child>
+                        <UiButton variants="'destructive'" :loading="isDeleting" @click="handleDelete">
+                          Delete Version
+                        </UiButton>
+                      </UiAlertDialogAction>
+                    </template>
+                  </DialogDelete>
+                  <DialogDelete
+                    title="Are you sure you want to delete this generation?"
+                    description="This will delete the generation and all results. This action cannot be undone."
+                  >
+                    <UiDropdownMenuItem class="!text-destructive" @select.prevent>
+                      <Trash2 class="py-1 mr-1" />
+                      <span>Delete Generation</span>
+                    </UiDropdownMenuItem>
+
+                    <template #footer>
+                      <UiAlertDialogCancel :disabled="isDeleting">
+                        Cancel
+                      </UiAlertDialogCancel>
+                      <UiAlertDialogAction as-child>
+                        <UiButton variants="'destructive'" :loading="isDeleting" @click="handleDelete(true)">
+                          Delete Generation
+                        </UiButton>
+                      </UiAlertDialogAction>
+                    </template>
+                  </DialogDelete>
+                </template>
               </UiDropdownMenuContent>
             </UiDropdownMenu>
 
@@ -211,7 +273,7 @@ defineOgImageComponent('Generated', {
       </div>
     </div>
 
-    <div v-if="user?.id === dataUser?.id" class="relative mt-16 flex justify-center items-center w-full gap-2">
+    <div v-if="isUserCreator" class="relative mt-16 flex justify-center items-center w-full gap-2">
       <PromptInput v-model="prompt" :loading="loading" class="absolute left-1/2 -translate-x-1/2 bottom-0" placeholder="Make the padding larger" @submit="handleSubmit" />
     </div>
   </div>
