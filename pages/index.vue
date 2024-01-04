@@ -33,7 +33,7 @@ useSeoMeta({
 <template>
   <div class="pb-8">
     <div class="mb-8 w-full h-[65vh] flex items-center justify-center magicpattern">
-      <UiCard class="w-96 mx-auto">
+      <UiCard class="mx-auto min-w-96 w-fit max-w-[600px]">
         <UiCardHeader>
           <UiCardTitle>Generate component with prompt</UiCardTitle>
         </UiCardHeader>
@@ -45,7 +45,7 @@ useSeoMeta({
     </div>
 
     <div class="w-full p-6 border bg-secondary rounded-xl">
-      <h2 class="font-bold text-3xl text-center my-6">
+      <h2 class="my-6 text-3xl font-bold text-center">
         Generated
       </h2>
       <GeneratedList :data="data" />
