@@ -147,7 +147,7 @@ defineOgImageComponent('Generated', {
     <div class="flex w-full">
       <div class="flex-shrink-0 mt-4 mr-4">
         <Clock class="w-6 h-6 text-gray-300" />
-        <div class="mt-3 flex flex-col-reverse gap-3">
+        <div class="flex flex-col-reverse gap-3 mt-3">
           <div
             v-for="(version, index) in data"
             :key="version.id"
@@ -155,7 +155,7 @@ defineOgImageComponent('Generated', {
             <UiTooltip :delay-duration="100">
               <UiTooltipTrigger as-child>
                 <UiButton
-                  class="text-left p-1 overflow-hidden rounded-lg  h-auto justify-start outline-1 text-gray-400 hover:text-primary"
+                  class="justify-start h-auto p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary"
                   :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
                   variant="secondary"
                   @click="handleChangeVersion(version)"
@@ -166,7 +166,7 @@ defineOgImageComponent('Generated', {
                 </UiButton>
               </UiTooltipTrigger>
 
-              <UiTooltipContent align="start" side="right" class="max-w-64 text-sm">
+              <UiTooltipContent align="start" side="right" class="text-sm max-w-64">
                 {{ version.description }}
               </UiTooltipContent>
             </UiTooltip>
@@ -255,26 +255,26 @@ defineOgImageComponent('Generated', {
             </UiDropdownMenu>
 
             <UiButton :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
-              <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
-              <Clipboard v-else class="py-1 -ml-1 mr-1" />
+              <ClipboardCheck v-if="copied" class="py-1 mr-1 -ml-1" />
+              <Clipboard v-else class="py-1 mr-1 -ml-1" />
               <span>{{ copied ? 'Copied' : 'Copy' }}</span>
             </UiButton>
             <UiButton :loading="!sfcString" @click="isPreviewing = !isPreviewing">
-              <Code2Icon class="py-1 -ml-1 mr-1" />
+              <Code2Icon class="py-1 mr-1 -ml-1" />
               <span>Preview</span>
             </UiButton>
           </div>
         </div>
 
-        <div class="border mt-4 rounded-xl overflow-hidden w-full flex relative" :class="[isUserCreator ? 'h-[calc(100vh-14rem)]' : 'h-[calc(100vh-10rem)]']">
+        <div class="relative z-0 flex w-full mt-4 overflow-hidden border rounded-xl" :class="[isUserCreator ? 'h-[calc(100vh-14rem)]' : 'h-[calc(100vh-10rem)]']">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <iframe ref="iframeRef" :src="`/p/${slug}`" class="w-full h-full" />
         </div>
       </div>
     </div>
 
-    <div v-if="isUserCreator" class="relative mt-16 flex justify-center items-center w-full gap-2">
-      <PromptInput v-model="prompt" :loading="loading" class="absolute left-1/2 -translate-x-1/2 bottom-0" placeholder="Make the padding larger" @submit="handleSubmit" />
+    <div v-if="isUserCreator" class="relative flex items-center justify-center w-full gap-2 mt-16">
+      <PromptInput v-model="prompt" :loading="loading" class="absolute bottom-0 -translate-x-1/2 left-1/2" placeholder="Make the padding larger" @submit="handleSubmit" />
     </div>
   </div>
 </template>
