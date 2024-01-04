@@ -13,9 +13,9 @@ const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
   const [_, templateString] = props?.sfcString?.split('<template>')
-  if (!templateString || !props.sfcString) {
+  if (!templateString || !props?.sfcString) {
     return defineComponent({
-      template: '<div>Generating...</div>',
+      template: '<div class="w-screen h-screen flex items-center justify-center"><div>Generating...</div></div>',
     })
   }
 
@@ -36,6 +36,7 @@ const Comp = computed(() => {
     }
   })
 
+  const otherNodes = script.scriptSetupAst?.filter(i => i.type !== 'ImportDeclaration')
   const variableNodes = script.scriptSetupAst?.filter(i => i.type === 'VariableDeclaration')
   const returnedValue: string[] = []
 
@@ -62,14 +63,14 @@ const Comp = computed(() => {
   // no-eval allow eval temporarily
   // eslint-disable-next-line no-eval
   const setupString = eval(`({ setup() {
-    ${variableNodes?.map(node => `${script.loc.source.slice(node.start!, node.end!)}\n`).join('')}
+    ${otherNodes?.map(node => `${script.loc.source.slice(node.start!, node.end!)}\n`).join('')}
     return { ${returnedValue.join(',')} }
   }})`)
 
   return defineComponent({
     components,
     setup: setupString?.setup,
-    template: template ?? '<div>Empty</div>',
+    template: template ?? '<div class="w-screen h-screen flex items-center justify-center"><div>Empty</div></div>',
   })
 })
 </script>

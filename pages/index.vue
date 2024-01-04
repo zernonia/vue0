@@ -19,28 +19,25 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="mb-8 w-full h-[65vh] flex items-center justify-center magicpattern">
-    <UiCard class="w-96 mx-auto">
-      <UiCardHeader>
-        <UiCardTitle>vue0</UiCardTitle>
-      </UiCardHeader>
+  <div class="pb-8">
+    <div class="mb-8 w-full h-[65vh] flex items-center justify-center magicpattern">
+      <UiCard class="w-96 mx-auto">
+        <UiCardHeader>
+          <UiCardTitle>Generate component with prompt</UiCardTitle>
+        </UiCardHeader>
 
-      <UiCardContent>
-        <div class="flex items-center gap-2">
-          <UiInput v-model="prompt" placeholder="A login page" :disabled="loading" @keyup.enter="handleSubmit" />
-          <UiButton :disabled="!prompt.length" :loading="loading" size="icon" class="flex-shrink-0" @click="handleSubmit">
-            <SparklesIcon class="p-1" />
-          </UiButton>
-        </div>
-      </UiCardContent>
-    </UiCard>
-  </div>
+        <UiCardContent>
+          <PromptInput v-model="prompt" placeholder="A login page" :disabled="loading" @submit="handleSubmit" />
+        </UiCardContent>
+      </UiCard>
+    </div>
 
-  <div class="w-full p-6 border bg-gray-100 rounded-xl">
-    <h2 class="font-bold text-3xl text-center my-6">
-      Generated
-    </h2>
-    <GeneratedList :data="data" />
+    <div class="w-full p-6 border bg-gray-100 rounded-xl">
+      <h2 class="font-bold text-3xl text-center my-6">
+        Generated
+      </h2>
+      <GeneratedList :data="data" />
+    </div>
   </div>
 </template>
 

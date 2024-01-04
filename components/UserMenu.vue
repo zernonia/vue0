@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LogOut, Menu } from 'lucide-vue-next'
+import { Bug, Github, LogOut, Menu, MessageCircleQuestion } from 'lucide-vue-next'
 
 const openaiKey = useOpenAIKey()
 const { loggedIn, user, clear } = useUserSession()
@@ -14,21 +14,38 @@ const { loggedIn, user, clear } = useUserSession()
       </UiButton>
     </UiDropdownMenuTrigger>
 
-    <UiDropdownMenuContent align="end" class="w-80">
+    <UiDropdownMenuContent align="end" class="w-64">
       <UiDropdownMenuItem v-if="!loggedIn" as-child>
         <a href="/api/auth/github">
-          Login with GitHub
+          <Github class="mr-2 h-4 w-4" />
+          <span>Login with GitHub</span>
         </a>
       </UiDropdownMenuItem>
-      <template v-else>
-        <UiDropdownMenuGroup>
-          <UiDropdownMenuLabel class="text-xs">
-            OpenAI Key
-          </UiDropdownMenuLabel>
-          <div class="px-1 pb-1">
-            <UiInput v-model="openaiKey" />
-          </div>
-        </UiDropdownMenuGroup>
+
+      <UiDropdownMenuGroup v-if="loggedIn">
+        <UiDropdownMenuLabel class="text-xs">
+          OpenAI Key
+        </UiDropdownMenuLabel>
+        <div class="px-1 pb-1">
+          <UiInput v-model="openaiKey" />
+        </div>
+      </UiDropdownMenuGroup>
+
+      <UiDropdownMenuSeparator />
+      <UiDropdownMenuItem as-child>
+        <NuxtLink to="/faq">
+          <MessageCircleQuestion class="mr-2 h-4 w-4" />
+          <span>FAQs</span>
+        </NuxtLink>
+      </UiDropdownMenuItem>
+      <UiDropdownMenuItem as-child>
+        <NuxtLink to="https://github.com/zernonia/vue0/issues/new?labels=bug&title=New+bug+report" target="_blank">
+          <Bug class="mr-2 h-4 w-4" />
+          <span>Report an issue</span>
+        </NuxtLink>
+      </UiDropdownMenuItem>
+
+      <template v-if="loggedIn">
         <UiDropdownMenuSeparator />
         <UiDropdownMenuItem @click="clear">
           <LogOut class="mr-2 h-4 w-4" />

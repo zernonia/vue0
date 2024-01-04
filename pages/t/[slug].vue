@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { Clipboard, ClipboardCheck, Code2Icon, GitBranch, SparklesIcon } from 'lucide-vue-next'
+import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, Share, Trash } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
@@ -71,6 +71,11 @@ onMounted(() => {
 
 const isPreviewing = ref(false)
 const { copy, copied } = useClipboard()
+const { copy: copyLink } = useClipboard()
+
+function handleShare() {
+  copyLink(location.href)
+}
 
 const isForking = ref(false)
 async function handleFork() {
@@ -94,6 +99,10 @@ async function handleFork() {
   }
 }
 
+function handleDelete() {
+  // write delete function
+}
+
 const componentDescription = computed(() => upperFirst(data.value?.at(-1)?.description ?? ''))
 
 // Page meta section
@@ -107,32 +116,37 @@ defineOgImageComponent('Generated', {
   avatarUrl: dataUser.value?.avatarUrl,
   imageUrl: `${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`,
 })
-console.log(`${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`)
 </script>
 
 <template>
   <div class="pb-8">
     <div class="flex w-full">
-      <div class="flex-shrink-0 mt-2 w-64 mr-4">
-        <h2 class="font-bold text-lg">
-          History
-        </h2>
-        <div class="mt-4 flex flex-col-reverse gap-3">
-          <UiButton
+      <div class="flex-shrink-0 mt-4 mr-4">
+        <Clock class="w-6 h-6 text-gray-300" />
+        <div class="mt-3 flex flex-col-reverse gap-3">
+          <div
             v-for="(version, index) in data"
             :key="version.id"
-            class="text-left overflow-hidden h-auto justify-start outline-1 text-gray-400 hover:text-primary"
-            :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
-            variant="secondary"
-            @click="handleChangeVersion(version)"
           >
-            <div>
-              <UiBadge variant="outline" class="bg-white">
-                v{{ data!.length - 1 - index }}
-              </UiBadge>
-              <span class="ml-2 ">{{ version.description }}</span>
-            </div>
-          </UiButton>
+            <UiTooltip :delay-duration="100">
+              <UiTooltipTrigger as-child>
+                <UiButton
+                  class="text-left p-1 overflow-hidden rounded-lg  h-auto justify-start outline-1 text-gray-400 hover:text-primary"
+                  :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
+                  variant="secondary"
+                  @click="handleChangeVersion(version)"
+                >
+                  <UiBadge variant="outline" class="bg-white">
+                    v{{ data!.length - 1 - index }}
+                  </UiBadge>
+                </UiButton>
+              </UiTooltipTrigger>
+
+              <UiTooltipContent align="start" side="right" class="max-w-64 text-sm">
+                {{ version.description }}
+              </UiTooltipContent>
+            </UiTooltip>
+          </div>
         </div>
       </div>
 
@@ -143,18 +157,41 @@ console.log(`${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`)
               <UiAvatarImage :src="dataUser.avatarUrl ?? ''" />
               <UiAvatarFallback>{{ dataUser.name?.slice(0, 1) }}</UiAvatarFallback>
             </UiAvatar>
-            <div class="text-sm max-w-64 text-ellipsis whitespace-nowrap overflow-hidden">
-              {{ componentDescription }}
+            <div class="text-sm max-w-[32rem] text-ellipsis whitespace-nowrap overflow-hidden">
+              {{ selectedVersion?.description }}
             </div>
           </div>
 
           <div class="flex items-center gap-2">
-            <UiButton
-              :disabled="!sfcString" :loading="isForking" variant="outline" @click="handleFork"
-            >
-              <GitBranch class="py-1 -ml-1 mr-1" />
-              <span>Fork</span>
-            </UiButton>
+            <UiDropdownMenu>
+              <UiDropdownMenuTrigger as-child>
+                <UiButton
+                  size="icon"
+                  :disabled="!sfcString" variant="outline"
+                >
+                  <MoreVertical class="p-1" />
+                </UiButton>
+              </UiDropdownMenuTrigger>
+
+              <UiDropdownMenuContent align="end">
+                <UiDropdownMenuItem @click="handleFork">
+                  <GitBranch class="py-1 mr-1" />
+                  <span>Fork</span>
+                </UiDropdownMenuItem>
+                <UiDropdownMenuItem @click="handleShare">
+                  <Share class="py-1 mr-1" />
+                  <span>Share</span>
+                </UiDropdownMenuItem>
+
+                <UiDropdownMenuSeparator />
+
+                <UiDropdownMenuItem class="text-destructive hover:!text-destructive" @click="handleDelete">
+                  <Trash class="py-1 mr-1" />
+                  <span>Delete</span>
+                </UiDropdownMenuItem>
+              </UiDropdownMenuContent>
+            </UiDropdownMenu>
+
             <UiButton :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
               <ClipboardCheck v-if="copied" class="py-1 -ml-1 mr-1" />
               <Clipboard v-else class="py-1 -ml-1 mr-1" />
@@ -173,11 +210,9 @@ console.log(`${useRuntimeConfig().public.siteUrl}/api/image/${slug.value}`)
         </div>
       </div>
     </div>
-    <div v-if="user?.id === dataUser?.id" class="mt-4 flex justify-center items-center w-full gap-2">
-      <UiInput v-model="prompt" :disabled="loading" placeholder="Make the padding larger" class="w-96" @keyup.enter.prevent="handleSubmit" />
-      <UiButton size="icon" :disabled="loading || !prompt.length" :loading="loading" @click="handleSubmit">
-        <SparklesIcon class="p-1" />
-      </UiButton>
+
+    <div v-if="user?.id === dataUser?.id" class="relative mt-16 flex justify-center items-center w-full gap-2">
+      <PromptInput v-model="prompt" :loading="loading" class="absolute left-1/2 -translate-x-1/2 bottom-0" placeholder="Make the padding larger" @submit="handleSubmit" />
     </div>
   </div>
 </template>
