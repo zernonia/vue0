@@ -39,6 +39,8 @@ useMagicKeys({
       v-model="input"
       class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium w-96 bg-transparent px-1"
       :placeholder="`${placeholder}.   (Press ‘/‘ to type)`"
+      @keyup.ctrl.enter="emits('submit', input)"
+      @keydown.meta.enter="emits('submit', input)"
     />
     <UiTooltip :delay-duration="100">
       <UiTooltipTrigger as-child>
