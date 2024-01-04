@@ -9,7 +9,7 @@ const slug = computed(() => route.params.slug.toString())
 const { toast } = useToast()
 const { data, refresh } = await useFetch<DBComponent[]>(`/api/component/${slug.value}`)
 const { user } = useUserSession()
-const dataUser = computed(() => data.value?.[0]?.user)
+const dataUser = computed(() => data.value?.at(-1)?.user)
 const isUserCreator = computed(() => dataUser.value?.id === user.value?.id)
 
 const selectedVersion = ref<NonNullable<typeof data.value>[number]>()
@@ -224,7 +224,7 @@ defineOgImageComponent('Generated', {
                         Cancel
                       </UiAlertDialogCancel>
                       <UiAlertDialogAction as-child>
-                        <UiButton variants="'destructive'" :loading="isDeleting" @click="handleDelete">
+                        <UiButton variants="'destructive'" :loading="isDeleting" @click="handleDelete()">
                           Delete Version
                         </UiButton>
                       </UiAlertDialogAction>
@@ -266,7 +266,7 @@ defineOgImageComponent('Generated', {
           </div>
         </div>
 
-        <div class="border mt-4 rounded-xl overflow-hidden h-[80vh] w-full flex relative">
+        <div class="border mt-4 rounded-xl overflow-hidden w-full flex relative" :class="[isUserCreator ? 'h-[calc(100vh-14rem)]' : 'h-[calc(100vh-10rem)]']">
           <LazyOutputCode v-show="isPreviewing" :sfc-string="sfcString" />
           <iframe ref="iframeRef" :src="`/p/${slug}`" class="w-full h-full" />
         </div>
