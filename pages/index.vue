@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import { SparklesIcon } from 'lucide-vue-next'
+import { useToast } from '~/components/ui/toast'
 
 const prompt = ref('')
 
 const { data } = useFetch<DBComponent[]>('/api/component/all')
 const { isNewPrompt, handleInit, loading } = usePrompt()
+const { toast } = useToast()
 
 async function handleSubmit() {
   loading.value = true
   isNewPrompt.value = true
-  const result = await handleInit(prompt.value)
-  await navigateTo(`/t/${result.slug}`)
+  try {
+    const result = await handleInit(prompt.value)
+    await navigateTo(`/t/${result.slug}`)
+  }
+  catch (err) {
+    console.log({ err })
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      // @ts-expect-error ignore error for now
+      description: err?.data?.message ?? 'Something wrong',
+    })
+  }
 }
 
 useSeoMeta({
