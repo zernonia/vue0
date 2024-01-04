@@ -67,6 +67,11 @@ const Comp = computed(() => {
     return { ${returnedValue.join(',')} }
   }})`)
 
+  console.log({
+    setupString,
+    template,
+  })
+
   return defineComponent({
     components,
     setup: setupString?.setup,
