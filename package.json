@@ -21,7 +21,7 @@
     "@nuxt/content": "^2.10.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-icons/vue": "^1.0.0",
-    "@vueuse/core": "^10.7.0",
+    "@vueuse/core": "^10.7.1",
     "better-sqlite3": "^9.2.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

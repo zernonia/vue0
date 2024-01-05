@@ -19,7 +19,8 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 const { textarea, input } = useTextareaAutosize()
 const textareaFocused = ref(false)
 
-syncRef(input, modelValue, { direction: 'ltr' })
+// @ts-expect-error based on docs it shouldn't need 3rd argument
+syncRef(input, modelValue)
 
 useMagicKeys({
   passive: false,
@@ -38,6 +39,7 @@ useMagicKeys({
     <textarea
       ref="textarea"
       v-model="input"
+      :disabled="loading"
       class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-96 w-fit bg-transparent px-1"
       :placeholder="`${placeholder}.   ${textareaFocused ? '(Press ‘Cmd+Enter‘ to generate)' : '(Press ‘/‘ to type)'}`"
       @focus="textareaFocused = true"
