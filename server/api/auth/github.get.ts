@@ -5,6 +5,7 @@ declare module '#auth-utils' {
     email: string
     name: string
     avatar_url: string
+    login: string
   }
 }
 export {}
@@ -18,7 +19,7 @@ export default oauth.githubEventHandler({
       await useDB().insert(tables.users).values({
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.login ?? user.name,
         avatarUrl: user.avatar_url,
       })
     }
