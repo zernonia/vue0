@@ -25,7 +25,9 @@ useHead({
 </script>
 
 <template>
-  <OutputWrapper>
-    <Output v-if="sfcString" :sfc-string="sfcString" />
-  </OutputWrapper>
+  <div>
+    <OutputWrapper>
+      <Output v-if="sfcString" :sfc-string="sfcString" />
+    </OutputWrapper>
+  </div>
 </template>
