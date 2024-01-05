@@ -35,12 +35,12 @@ useMagicKeys({
 </script>
 
 <template>
-  <div class="flex items-end px-4 py-2 text-sm border rounded-lg text-muted-foreground bg-muted focus-within:ring-1 focus-within:ring-primary">
+  <div class="flex items-end px-2 md:px-4 py-2 text-sm border rounded-lg text-muted-foreground bg-muted focus-within:ring-1 focus-within:ring-primary">
     <textarea
       ref="textarea"
       v-model="input"
       :disabled="loading"
-      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-[26rem] w-fit bg-transparent px-1"
+      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium w-full md:min-w-[26rem] bg-transparent px-1"
       :placeholder="`${placeholder}.   ${textareaFocused ? '(Press ‘Cmd+Enter‘ to generate)' : '(Press ‘/‘ to type)'}`"
       @focus="textareaFocused = true"
       @blur="textareaFocused = false"

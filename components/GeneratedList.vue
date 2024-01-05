@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <div v-if="data?.length" class="w-full px-4 grid md:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
+  <div v-if="data?.length" class="w-full md:px-4 grid md:grid-cols-3 gap-4 md:gap-8 max-w-[1200px] mx-auto">
     <NuxtLink
       v-for="item in data"
       :key="item.id"

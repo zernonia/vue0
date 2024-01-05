@@ -5,8 +5,8 @@ import { GithubLogoIcon } from '@radix-icons/vue'
 <template>
   <div>
     <div class=" w-full h-full flex flex-col items-center justify-center ">
-      <header class="sticky top-0 flex p-4 w-full z-10">
-        <NuxtLink to="/" class="group h-10 flex items-center gap-1 text-3xl font-black">
+      <header class="sticky top-0 flex p-2 md:p-4 w-full z-10">
+        <NuxtLink to="/" class="group h-10 flex items-center gap-1 text-xl md:text-3xl font-black">
           <Logo />
           <span>vue0</span>
         </NuxtLink>
@@ -23,7 +23,7 @@ import { GithubLogoIcon } from '@radix-icons/vue'
           <UserMenu />
         </div>
       </header>
-      <div class="px-4 w-full">
+      <div class="px-2 md:px-4 w-full">
         <slot />
       </div>
     </div>
