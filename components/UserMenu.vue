@@ -23,7 +23,7 @@ const { loggedIn, user, clear } = useUserSession()
 
     <UiDropdownMenuContent align="end" class="w-64">
       <UiDropdownMenuItem v-if="!loggedIn" as-child>
-        <a href="/api/auth/github">
+        <a href="/api/auth/github" @click="umTrackEvent('login')">
           <Github class="mr-2 h-4 w-4" />
           <span>Login with GitHub</span>
         </a>

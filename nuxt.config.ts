@@ -31,6 +31,7 @@ export default defineNuxtConfig({
     '@nuxtseo/module',
     '@nuxt/content',
   ],
+  extends: ['nuxt-umami'],
   shadcn: {
     prefix: 'Ui',
   },

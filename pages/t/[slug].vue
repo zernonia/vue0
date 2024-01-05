@@ -41,6 +41,7 @@ function handleChangeVersion(version: DBComponent) {
 async function handleSubmit() {
   if (!prompt.value)
     return
+  umTrackEvent('iterate-generation', { slug: slug.value })
   const basedOnResultId = selectedVersion.value?.id
   const result = await handleInit(prompt.value, selectedVersion.value?.slug)
 
@@ -80,11 +81,13 @@ const { copy: copyLink } = useClipboard()
 
 function handleShare() {
   copyLink(location.href)
+  umTrackEvent('share-generation', { slug: slug.value })
 }
 
 const isForking = ref(false)
 async function handleFork() {
   isForking.value = true
+  umTrackEvent('fork-generation')
   try {
     const result = await $fetch<DBComponent>('/api/component/fork', {
       method: 'POST',
@@ -108,6 +111,7 @@ const isDeleting = ref(false)
 async function handleDelete(all = false) {
   isDeleting.value = true
   const body = all ? { slug: slug.value, id: selectedVersion.value?.id } : { id: selectedVersion.value?.id }
+  umTrackEvent('delete-generation')
   try {
     const result = await $fetch<DBComponent>('/api/component/delete', {
       method: 'POST',
@@ -256,7 +260,7 @@ defineOgImageComponent('Generated', {
               </UiDropdownMenuContent>
             </UiDropdownMenu>
 
-            <UiButton class="px-1.5 md:px-4" :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? '')">
+            <UiButton class="px-1.5 md:px-4" :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? ''); umTrackEvent('copy-code', { slug }) ">
               <ClipboardCheck v-if="copied" class="py-1 md:mr-1 md:-ml-1" />
               <Clipboard v-else class="py-1 md:mr-1 md:-ml-1" />
               <span class="hidden md:inline">{{ copied ? 'Copied' : 'Copy' }}</span>

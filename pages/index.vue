@@ -12,6 +12,7 @@ async function handleSubmit() {
     return
   loading.value = true
   isNewPrompt.value = true
+  umTrackEvent('create-generation')
   try {
     const result = await handleInit(prompt.value)
     await navigateTo(`/t/${result.slug}`)

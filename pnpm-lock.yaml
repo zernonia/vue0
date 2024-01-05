@@ -59,6 +59,9 @@ dependencies:
   lucide-vue-next:
     specifier: ^0.301.0
     version: 0.301.0(vue@3.4.3)
+  nuxt-umami:
+    specifier: ^2.5.7
+    version: 2.5.7(vue@3.4.3)
   openai:
     specifier: ^4.24.0
     version: 4.24.1
@@ -8799,6 +8802,15 @@ packages:
       - vue
       - webpack
     dev: true
+
+  /nuxt-umami@2.5.7(vue@3.4.3):
+    resolution: {integrity: sha512-HvWqfKKtIzsABrCfvjAtbMap1ceOkt626Bxjjs3oVk44IEnRwwiecoAXwqLpu0DNtoizjJe163AavvSGOacBGA==}
+    dependencies:
+      '@vueuse/core': 10.7.1(vue@3.4.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
 
   /nuxt@3.9.0(eslint@8.56.0)(typescript@5.3.3)(vite@5.0.10):
     resolution: {integrity: sha512-PiUQwJRBlclRrotcQAK95ueeRSiFhZmwNBj9MtIdWF4XK97OjNszUmNjKphqB7BsVcm089l0jZm1N0sYr7tMOg==}
