@@ -39,6 +39,8 @@ function handleChangeVersion(version: DBComponent) {
 }
 
 async function handleSubmit() {
+  if (!prompt.value)
+    return
   const basedOnResultId = selectedVersion.value?.id
   const result = await handleInit(prompt.value, selectedVersion.value?.slug)
 

@@ -8,6 +8,8 @@ const { isNewPrompt, handleInit, loading } = usePrompt()
 const { toast } = useToast()
 
 async function handleSubmit() {
+  if (!prompt.value)
+    return
   loading.value = true
   isNewPrompt.value = true
   try {
@@ -22,6 +24,9 @@ async function handleSubmit() {
       // @ts-expect-error ignore error for now
       description: err?.data?.message ?? 'Something wrong',
     })
+  }
+  finally {
+    loading.value = false
   }
 }
 
