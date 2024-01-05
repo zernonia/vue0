@@ -8,9 +8,16 @@ const { loggedIn, user, clear } = useUserSession()
 <template>
   <UiDropdownMenu>
     <UiDropdownMenuTrigger as-child>
-      <UiButton class="flex-shrink-0 rounded-full overflow-hidden" size="icon" variant="secondary">
-        <Menu v-if="!loggedIn" class="p-1" />
-        <img v-else-if="user.avatar_url" :src="user.avatar_url" class="w-full h-full">
+      <UiButton class="relative flex-shrink-0 rounded-full" size="icon" variant="secondary">
+        <div class=" rounded-full overflow-hidden">
+          <Menu v-if="!loggedIn" class="p-1" />
+          <img v-else-if="user.avatar_url" :src="user.avatar_url" class="w-full h-full">
+        </div>
+
+        <div v-if="!openaiKey" class="absolute -bottom-0.5 -left-1">
+          <div class="w-3 h-3 rounded-full  bg-green-500" />
+          <div class="w-3 h-3 absolute top-0 rounded-full  bg-green-400 animate-ping" />
+        </div>
       </UiButton>
     </UiDropdownMenuTrigger>
 
@@ -24,10 +31,10 @@ const { loggedIn, user, clear } = useUserSession()
 
       <UiDropdownMenuGroup v-if="loggedIn">
         <UiDropdownMenuLabel class="text-xs">
-          OpenAI Key
+          OpenAI Key *
         </UiDropdownMenuLabel>
         <div class="px-1 pb-1">
-          <UiInput v-model="openaiKey" />
+          <UiInput v-model="openaiKey" placeholder="sk-************ (Required)" />
         </div>
       </UiDropdownMenuGroup>
 
