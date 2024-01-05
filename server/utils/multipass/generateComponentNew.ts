@@ -45,6 +45,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
         + `- DO NOT HAVE ANY DYNAMIC DATA OR DATA PROPS ! Components are meant to be working as is without supplying any variable to them when importing them ! Only write a component that render directly with placeholders as data, component not supplied with any dynamic data.\n`
         + `- DO NOT HAVE ANY DYNAMIC DATA OR DATA PROPS OR defineProps ! `
         + `- Only write the code for the component; Do not write extra code to import it! The code will directly be stored in an individual .vue file !\n`
+        + `- Placeholder image must use src="/placeholder.svg"`
         + `Write the Vue component code as the creative genius and Vue component genius you are - with good ui formatting.\n`,
     },
   ]
