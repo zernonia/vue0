@@ -11,6 +11,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       siteUrl: '',
+      umamiHost: '',
+      umamiId: '',
     },
     browserlessApiKey: '',
     github: {
@@ -32,6 +34,11 @@ export default defineNuxtConfig({
     '@nuxt/content',
   ],
   extends: ['nuxt-umami'],
+  appConfig: {
+    umami: {
+      version: 2,
+    },
+  },
   shadcn: {
     prefix: 'Ui',
   },
