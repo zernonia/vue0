@@ -17,6 +17,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 })
 
 const { textarea, input } = useTextareaAutosize()
+const textareaFocused = ref(false)
 
 syncRef(input, modelValue, { direction: 'ltr' })
 
@@ -33,13 +34,16 @@ useMagicKeys({
 </script>
 
 <template>
-  <div class="flex items-end text-muted-foreground text-sm bg-muted px-4 py-2 rounded-lg border focus-within:ring-1 focus-within:ring-primary">
+  <div class="flex items-end px-4 py-2 text-sm border rounded-lg text-muted-foreground bg-muted focus-within:ring-1 focus-within:ring-primary">
     <textarea
       ref="textarea"
       v-model="input"
-      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium w-96 bg-transparent px-1"
-      :placeholder="`${placeholder}.   (Press ‘/‘ to type)`"
-      @keydown.enter.prevent="emits('submit', input)"
+      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-96 w-fit bg-transparent px-1"
+      :placeholder="`${placeholder}.   ${textareaFocused ? '(Press ‘Cmd+Enter‘ to generate)' : '(Press ‘/‘ to type)'}`"
+      @focus="textareaFocused = true"
+      @blur="textareaFocused = false"
+      @keydown.meta.enter="emits('submit', input)"
+      @keydown.ctrl.enter="emits('submit', input)"
     />
     <UiTooltip :delay-duration="100">
       <UiTooltipTrigger as-child>
