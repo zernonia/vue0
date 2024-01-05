@@ -42,6 +42,7 @@ useMagicKeys({
       :placeholder="`${placeholder}.   ${textareaFocused ? '(Press `Enter` to generate)' : '(Press ‘/‘ to type)'}`"
       @focus="textareaFocused = true"
       @blur="textareaFocused = false"
+      @keydown.enter.prevent="emits('submit', input)"
     />
     <UiTooltip :delay-duration="100">
       <UiTooltipTrigger as-child>
