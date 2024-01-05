@@ -40,7 +40,7 @@ useMagicKeys({
       ref="textarea"
       v-model="input"
       :disabled="loading"
-      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-96 w-fit bg-transparent px-1"
+      class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-[26rem] w-fit bg-transparent px-1"
       :placeholder="`${placeholder}.   ${textareaFocused ? '(Press ‘Cmd+Enter‘ to generate)' : '(Press ‘/‘ to type)'}`"
       @focus="textareaFocused = true"
       @blur="textareaFocused = false"
