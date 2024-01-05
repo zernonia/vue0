@@ -39,10 +39,11 @@ useMagicKeys({
       ref="textarea"
       v-model="input"
       class="outline-none resize-none my-1 h-[20px] no-scrollbar font-medium min-w-96 w-fit bg-transparent px-1"
-      :placeholder="`${placeholder}.   ${textareaFocused ? '(Press `Enter` to generate)' : '(Press ‘/‘ to type)'}`"
+      :placeholder="`${placeholder}.   ${textareaFocused ? '(Press ‘Cmd+Enter‘ to generate)' : '(Press ‘/‘ to type)'}`"
       @focus="textareaFocused = true"
       @blur="textareaFocused = false"
-      @keydown.enter.prevent="emits('submit', input)"
+      @keydown.meta.enter="emits('submit', input)"
+      @keydown.ctrl.enter="emits('submit', input)"
     />
     <UiTooltip :delay-duration="100">
       <UiTooltipTrigger as-child>
