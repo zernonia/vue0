@@ -87,7 +87,7 @@
   },
   {
     "name": "button",
-    "description": "Displays a button or a component that looks like a button.",
+    "description": "Displays a button or a component that looks like a button. Variant 'default' is the primary variant",
     "usage": "<script setup lang=\"ts\">\nimport { Button } from '@/components/ui/button'\n</script>\n\n<template>\n  <Button>Button</Button>\n</template>\n",
     "examples": [
       {
