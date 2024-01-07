@@ -13,7 +13,7 @@ vue0
 </p>
 
 <p align="center">
-Vue version open source alternative for [v0](v0.dev).
+Vue version open source alternative for <a href="https://v0.dev" target="__blank">v0</a>.
 <p>
 
 <img alt="hero image" src="public/og.png"  width="100%" height="100%">
