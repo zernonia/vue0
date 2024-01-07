@@ -11,7 +11,6 @@ const { currentPage } = useOffsetPagination({
 })
 
 const currentPageData = computed(() => props.data?.slice(((currentPage.value - 1) * PAGE_SIZE), (currentPage.value * PAGE_SIZE)))
-console.log(currentPageData)
 </script>
 
 <template>

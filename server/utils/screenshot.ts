@@ -6,11 +6,10 @@ const chromeExecutables = {
   darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
 }
 
-export default defineEventHandler(async (event) => {
+export async function screenshot(id: string) {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
-  const slug = event.context.params?.slug ?? ''
-  const url = IS_PRODUCTION ? `${useRuntimeConfig().public.siteUrl}/p/${slug}` : `http://localhost:3000/p/${slug}`
+  const url = IS_PRODUCTION ? `${useRuntimeConfig().public.siteUrl}/s/${id}` : `http://localhost:3000/s/${id}`
   const browserlessApiKey = useRuntimeConfig().browserlessApiKey
 
   const getBrowser = () =>
@@ -32,11 +31,12 @@ export default defineEventHandler(async (event) => {
       type: 'jpeg',
     })
     await browser.close()
-    setHeaders(event, {
-      'Content-Type': 'image/jpeg',
-      'Cache-Control': 'max-age=604800, public',
-    })
 
+    await useDB().insert(tables.images)
+      .values({
+        id,
+        buffer,
+      })
     return buffer
   }
   catch (err) {
@@ -44,4 +44,4 @@ export default defineEventHandler(async (event) => {
     if (err instanceof Error)
       return createError(err)
   }
-})
+}

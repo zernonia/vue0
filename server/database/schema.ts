@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { init } from '@paralleldrive/cuid2'
 
 const createId = init({
@@ -21,4 +21,9 @@ export const components = sqliteTable('components', {
   userId: integer('user_id').references(() => users.id),
   metadata: text('metadata', { mode: 'json' }),
   completed: integer('completed', { mode: 'boolean' }),
+})
+
+export const images = sqliteTable('images', {
+  id: text('id').primaryKey(),
+  buffer: blob('buffer', { mode: 'buffer' }),
 })

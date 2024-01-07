@@ -20,6 +20,8 @@ export default async (event: H3Event<EventHandlerRequest>, id: string, slug?: st
     completed: true,
   }).where(eq(tables.components.id, id)).returning().get()
 
+  await screenshot(result.id)
+
   console.dir(result)
   return result
 }
