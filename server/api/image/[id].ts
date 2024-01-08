@@ -13,7 +13,9 @@ export default defineEventHandler(async (event) => {
       return result.buffer
     }
     else {
-      return createError('Invalid id found')
+      sendRedirect(event, '/placeholder.svg')
+
+      // return createError('Invalid id found')
     }
   }
   else {
