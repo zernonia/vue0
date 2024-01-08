@@ -183,10 +183,12 @@ defineOgImageComponent('Generated', {
       <div class="flex-1 mt-2 md:mt-0 w-full">
         <div class="flex justify-between">
           <div class="flex items-center gap-2">
-            <UiAvatar v-if="dataUser" class="w-9 h-9">
-              <UiAvatarImage :src="dataUser.avatarUrl ?? ''" />
-              <UiAvatarFallback>{{ dataUser.name?.slice(0, 1) }}</UiAvatarFallback>
-            </UiAvatar>
+            <NuxtLink v-if="dataUser" class="inline-flex" :to="`/${dataUser.name}`">
+              <UiAvatar class="w-9 h-9">
+                <UiAvatarImage :src="dataUser.avatarUrl ?? ''" />
+                <UiAvatarFallback>{{ dataUser.name?.slice(0, 1) }}</UiAvatarFallback>
+              </UiAvatar>
+            </NuxtLink>
             <div class="text-sm max-w-[9rem] md:max-w-[32rem] text-ellipsis whitespace-nowrap overflow-hidden">
               {{ selectedVersion?.description }}
             </div>
