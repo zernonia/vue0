@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Bug, Github, LogOut, Menu, MessageCircleQuestion } from 'lucide-vue-next'
+import { Bug, GalleryThumbnails, Github, LogOut, Menu, MessageCircleQuestion } from 'lucide-vue-next'
 
 const openaiKey = useOpenAIKey()
 const { loggedIn, user, clear } = useUserSession()
@@ -39,6 +39,12 @@ const { loggedIn, user, clear } = useUserSession()
       </UiDropdownMenuGroup>
 
       <UiDropdownMenuSeparator />
+      <UiDropdownMenuItem v-if="user" as-child>
+        <NuxtLink :to="`/${user.login}`">
+          <GalleryThumbnails class="mr-2 h-4 w-4" />
+          <span>Gallery</span>
+        </NuxtLink>
+      </UiDropdownMenuItem>
       <UiDropdownMenuItem as-child>
         <NuxtLink to="/faq">
           <MessageCircleQuestion class="mr-2 h-4 w-4" />

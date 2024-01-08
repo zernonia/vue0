@@ -4,8 +4,9 @@ const props = defineProps<{
 }>()
 
 const PAGE_SIZE = 15
+const total = computed(() => (props.data?.length ?? 0))
 const { currentPage } = useOffsetPagination({
-  total: props.data?.length,
+  total,
   page: 1,
   pageSize: PAGE_SIZE,
 })
@@ -49,7 +50,7 @@ const currentPageData = computed(() => props.data?.slice(((currentPage.value - 1
     </div>
 
     <div v-if="data?.length" class="w-full flex mt-8 mb-4 justify-center">
-      <UiPagination v-model:page="currentPage" :total="data.length" :items-per-page="PAGE_SIZE">
+      <UiPagination v-model:page="currentPage" :total="total" show-edges :items-per-page="PAGE_SIZE">
         <UiPaginationList v-slot="{ items }" class="flex items-center gap-2">
           <UiTooltip>
             <UiTooltipTrigger>
