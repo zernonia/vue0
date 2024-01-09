@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Github } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const prompt = ref('')
@@ -6,10 +7,26 @@ const prompt = ref('')
 const { data } = useFetch<DBComponent[]>('/api/component/all')
 const { isNewPrompt, handleInit, loading } = usePrompt()
 const { toast } = useToast()
+const openaiKey = useOpenAIKey()
+const { loggedIn } = useUserSession()
+
+const openLoginDialog = ref(false)
+const openSetupOpenAiDialog = ref(loggedIn.value && !openaiKey.value)
 
 async function handleSubmit() {
   if (!prompt.value)
     return
+
+  if (!loggedIn.value) {
+    openLoginDialog.value = true
+    return
+  }
+
+  if (!openaiKey.value) {
+    openSetupOpenAiDialog.value = true
+    return
+  }
+
   loading.value = true
   isNewPrompt.value = true
   umTrackEvent('create-generation')
@@ -29,6 +46,19 @@ async function handleSubmit() {
   finally {
     loading.value = false
   }
+}
+
+function saveOpenaiKey() {
+  if (openaiKey.value.startsWith('sk-') === false) {
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Please enter a correct OpenAI API key',
+    })
+    return
+  }
+
+  openSetupOpenAiDialog.value = false
 }
 
 useSeoMeta({
@@ -56,6 +86,42 @@ useSeoMeta({
       </h2>
       <GeneratedList :data="data" />
     </div>
+
+    <DialogAction
+      v-model:open="openLoginDialog"
+      title="Sign in to vue0.dev"
+      description="A GitHub account is required to use vue0."
+    >
+      <template #footer>
+        <a href="/api/auth/github" class="ml-auto" @click="umTrackEvent('login')">
+          <UiButton>
+            <Github class="mr-2 h-4 w-4" />
+            <span>Login with GitHub</span>
+          </UiButton>
+        </a>
+      </template>
+    </DialogAction>
+
+    <DialogAction
+      v-model:open="openSetupOpenAiDialog"
+      title="Setup OpenAI API Key"
+    >
+      <template #body>
+        <form class="flex flex-col gap-4" @submit.prevent="saveOpenaiKey">
+          <p class="text-sm">
+            Get your own <a href="https://platform.openai.com/api-keys" target="_blank" class="underline">OpenAI API key</a> and enter it below:
+          </p>
+
+          <div class="px-1 pb-1 w-full">
+            <UiInput v-model="openaiKey" placeholder="sk-************ (Required)" required />
+          </div>
+
+          <UiButton type="submit" class="ml-auto">
+            <span>Save</span>
+          </UiButton>
+        </form>
+      </template>
+    </DialogAction>
   </div>
 </template>
 
