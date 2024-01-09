@@ -156,7 +156,7 @@ defineOgImageComponent('Generated', {
           <Clock class="w-4 h-4 text-gray-400" />
           <span class="text-gray-400 font-medium text-sm hidden md:inline-flex">Versions</span>
         </div>
-        <div class="flex flex-row-reverse md:flex-col-reverse gap-3 overflow-x-auto p-1 md:p-0">
+        <div class="flex flex-row-reverse md:flex-col-reverse gap-3 overflow-auto p-1">
           <div
             v-for="(version, index) in data"
             :key="version.id"

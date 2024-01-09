@@ -50,7 +50,7 @@ const currentPageData = computed(() => props.data?.slice(((currentPage.value - 1
     </div>
 
     <div v-if="data?.length" class="w-full flex mt-8 mb-4 justify-center">
-      <UiPagination v-model:page="currentPage" :total="total" show-edges :items-per-page="PAGE_SIZE">
+      <UiPagination v-model:page="currentPage" :total="total" :sibling-count="1" :items-per-page="PAGE_SIZE">
         <UiPaginationList v-slot="{ items }" class="flex items-center gap-2">
           <UiTooltip>
             <UiTooltipTrigger>
@@ -75,6 +75,8 @@ const currentPageData = computed(() => props.data?.slice(((currentPage.value - 1
                 {{ item.value }}
               </UiButton>
             </UiPaginationListItem>
+
+            <UiPaginationEllipsis v-else :key="item.type" :index="index" />
           </template>
 
           <UiTooltip>
