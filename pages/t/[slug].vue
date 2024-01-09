@@ -154,9 +154,9 @@ defineOgImageComponent('Generated', {
       <div class="flex-shrink-0 md:mt-4 md:mr-4 flex flex-row md:flex-col items-center gap-3 ">
         <div class="flex gap-2 items-center">
           <Clock class="w-4 h-4 text-gray-400" />
-          <span class="text-gray-400">Versions</span>
+          <span class="text-gray-400 font-medium text-sm hidden md:inline-flex">Versions</span>
         </div>
-        <div class="flex flex-row-reverse md:flex-col-reverse gap-3">
+        <div class="flex flex-row-reverse md:flex-col-reverse gap-3 overflow-x-auto p-1 md:p-0">
           <div
             v-for="(version, index) in data"
             :key="version.id"
@@ -164,7 +164,7 @@ defineOgImageComponent('Generated', {
             <UiTooltip :delay-duration="100">
               <UiTooltipTrigger as-child>
                 <UiButton
-                  class="justify-start h-auto min-w-30 min-h-6 p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary relative "
+                  class="justify-start h-auto min-w-[6rem] min-h-6 p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary relative "
                   :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
                   variant="secondary"
                   @click="handleChangeVersion(version)"
