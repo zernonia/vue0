@@ -176,9 +176,9 @@ defineOgImageComponent('Generated', {
                 </UiButton>
               </UiTooltipTrigger>
 
-              <UiTooltipContent align="start" side="right" class="max-w-64 flex flex-col gap-2">
-                <img :src="`/api/image/${version.id}`" class="aspect-video object-cover w-auto h-auto">
-                <span class="text-sm">{{ version.description }}</span>
+              <UiTooltipContent align="start" side="right" class="max-w-64 flex flex-col gap-2 p-1.5">
+                <img :src="`/api/image/${version.id}`" class="aspect-video object-cover w-auto h-auto rounded">
+                <span class="text-sm p-0.5">{{ version.description }}</span>
               </UiTooltipContent>
             </UiTooltip>
           </div>
