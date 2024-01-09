@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, Share, Trash, Trash2 } from 'lucide-vue-next'
+import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
@@ -151,9 +151,12 @@ defineOgImageComponent('Generated', {
 <template>
   <div class="pb-2 md:pb-8">
     <div class="flex flex-col md:flex-row w-full">
-      <div class="flex-shrink-0 md:mt-4 md:mr-4 flex flex-row md:flex-col gap-3 ">
-        <Clock class="w-6 h-6 text-gray-300" />
-        <div class="flex flex-row-reverse md:flex-col-reverse gap-3">
+      <div class="flex-shrink-0 md:mt-4 md:mr-4 flex flex-row md:flex-col items-center gap-3 ">
+        <div class="flex gap-2 items-center">
+          <Clock class="w-4 h-4 text-gray-400" />
+          <span class="text-gray-400 font-medium text-sm hidden md:inline-flex">Versions</span>
+        </div>
+        <div class="flex flex-row-reverse md:flex-col-reverse gap-3 overflow-x-auto p-1 md:p-0">
           <div
             v-for="(version, index) in data"
             :key="version.id"
@@ -161,19 +164,21 @@ defineOgImageComponent('Generated', {
             <UiTooltip :delay-duration="100">
               <UiTooltipTrigger as-child>
                 <UiButton
-                  class="justify-start h-auto p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary"
+                  class="justify-start h-auto min-w-[6rem] min-h-6 p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary relative "
                   :class="{ 'outline outline-primary !text-primary': selectedVersion?.id === version.id }"
                   variant="secondary"
                   @click="handleChangeVersion(version)"
                 >
-                  <UiBadge variant="outline" class="bg-white">
+                  <UiBadge variant="outline" class="bg-white absolute bottom-2 left-2">
                     v{{ data!.length - 1 - index }}
                   </UiBadge>
+                  <img :src="`/api/image/${version.id}`" class="aspect-video object-cover w-32 h-auto">
                 </UiButton>
               </UiTooltipTrigger>
 
-              <UiTooltipContent align="start" side="right" class="text-sm max-w-64">
-                {{ version.description }}
+              <UiTooltipContent align="start" side="right" class="max-w-64 flex flex-col gap-2 p-1.5">
+                <img :src="`/api/image/${version.id}`" class="aspect-video object-cover w-auto h-auto rounded">
+                <span class="text-sm p-0.5">{{ version.description }}</span>
               </UiTooltipContent>
             </UiTooltip>
           </div>
@@ -268,8 +273,9 @@ defineOgImageComponent('Generated', {
               <span class="hidden md:inline">{{ copied ? 'Copied' : 'Copy' }}</span>
             </UiButton>
             <UiButton class="px-1.5 md:px-4" :loading="!sfcString" @click="isPreviewing = !isPreviewing">
-              <Code2Icon class="py-1 md:mr-1 md:-ml-1" />
-              <span class="hidden md:inline">Preview</span>
+              <MousePointerSquare v-if="isPreviewing" class="py-1 md:mr-1 md:-ml-1" />
+              <Code2Icon v-else class="py-1 md:mr-1 md:-ml-1" />
+              <span class="hidden md:inline">{{ isPreviewing ? 'Preview' : 'Code' }}</span>
             </UiButton>
           </div>
         </div>

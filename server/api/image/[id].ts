@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm'
-import { connect, launch } from 'puppeteer-core'
 
 export default defineEventHandler(async (event) => {
   const id = event.context.params?.id ?? ''
@@ -13,7 +12,8 @@ export default defineEventHandler(async (event) => {
       return result.buffer
     }
     else {
-      return createError('Invalid id found')
+      sendRedirect(event, '/placeholder.svg')
+      // return createError('Invalid id found')
     }
   }
   else {
