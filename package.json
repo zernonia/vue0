@@ -55,7 +55,7 @@
     "@vueuse/nuxt": "^10.7.0",
     "eslint": "^8.56.0",
     "gray-matter": "^4.0.3",
-    "nuxt": "^3.9.1",
+    "nuxt": "^3.9.0",
     "nuxt-auth-utils": "^0.0.13",
     "pathe": "^1.1.1",
     "puppeteer-core": "^21.6.1",
