@@ -48,6 +48,11 @@ export default defineNuxtConfig({
   },
   ogImage: {
     debug: true,
+    compatibility: {
+      prerender: {
+        chromium: false,
+      },
+    },
   },
   hooks: {
     'vite:extendConfig': (config, { isClient }) => {
