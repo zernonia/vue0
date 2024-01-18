@@ -7,11 +7,17 @@ import { useToast } from '@/components/ui/toast'
 
 const props = defineProps<{
   sfcString: string
+  errorMessage: string | null | undefined
 }>()
 
 const files = import.meta.glob('../components/ui/**/*.ts', { eager: true })
 
 const Comp = computed(() => {
+  if (props.errorMessage) {
+    return defineComponent({
+      template: `<div class="w-screen h-screen flex items-center justify-center text-destructive"><div>Error: ${props.errorMessage}</div></div>`,
+    })
+  }
   const [_, templateString] = props?.sfcString?.split('<template>')
   if (!templateString || !props?.sfcString) {
     return defineComponent({

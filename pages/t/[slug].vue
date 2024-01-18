@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
+import { AlertTriangle, Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
@@ -19,7 +19,7 @@ const iframeRef = ref<HTMLIFrameElement>()
 watch(data, (n) => {
   const item = n?.[0]
   selectedVersion.value = item
-  sendDataToIframe(item?.code ?? '')
+  sendDataToIframe({ code: item?.code ?? '', error: item?.error })
 }, { immediate: true })
 
 const prompt = ref('')
@@ -27,7 +27,7 @@ const { loading, contentCode, onDone, onStream, onError, isNewPrompt, handleInit
 
 const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value ?? '')
 
-function sendDataToIframe(data: string) {
+function sendDataToIframe(data: IframeData) {
   const channel = new MessageChannel()
   if (iframeRef.value)
     iframeRef.value.contentWindow?.postMessage({ from: 'vue0', data }, '*', [channel.port2])
@@ -35,7 +35,7 @@ function sendDataToIframe(data: string) {
 
 function handleChangeVersion(version: DBComponent) {
   selectedVersion.value = version
-  sendDataToIframe(version.code!)
+  sendDataToIframe({ code: version.code!, error: version.error })
 }
 
 async function handleSubmit() {
@@ -53,13 +53,15 @@ async function handleSubmit() {
   })
 }
 
-onStream(sendDataToIframe)
+onStream(data => sendDataToIframe({ code: data }))
 onError((err) => {
+  refresh()
   toast({
     title: 'Error',
     description: err,
     variant: 'destructive',
   })
+  sendDataToIframe({ code: '', error: err })
 })
 
 onDone(() => {
@@ -207,6 +209,14 @@ defineOgImageComponent('Generated', {
           </div>
 
           <div class="flex items-center gap-2">
+            <UiTooltip v-if="selectedVersion?.error" :default-open="true">
+              <UiTooltipTrigger class="text-destructive mr-2">
+                <AlertTriangle class="p-0.5" />
+              </UiTooltipTrigger>
+              <UiTooltipContent class="bg-destructive" side="bottom">
+                Error {{ selectedVersion?.error }}
+              </UiTooltipContent>
+            </UiTooltip>
             <UiDropdownMenu v-model:open="dropdownOpen">
               <UiDropdownMenuTrigger as-child>
                 <UiButton
@@ -294,7 +304,7 @@ defineOgImageComponent('Generated', {
       </div>
     </div>
 
-    <div v-if="isUserCreator" class="relative flex items-center justify-center w-full gap-2 mt-3 md:mt-16">
+    <div v-if="isUserCreator && !selectedVersion?.error" class="relative flex items-center justify-center w-full gap-2 mt-3 md:mt-16">
       <PromptInput v-model="prompt" :loading="loading" class="md:absolute bottom-0 w-full md:w-fit md:-translate-x-1/2 left-1/2" placeholder="Make the padding larger" @submit="handleSubmit" />
     </div>
   </div>
