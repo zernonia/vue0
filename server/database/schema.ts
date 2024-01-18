@@ -1,3 +1,4 @@
+import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core'
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { init } from '@paralleldrive/cuid2'
 
@@ -22,6 +23,7 @@ export const components = sqliteTable('components', {
   metadata: text('metadata', { mode: 'json' }),
   completed: integer('completed', { mode: 'boolean' }),
   error: text('error'),
+  basedOnId: text('based_on_id').references((): AnySQLiteColumn => components.id),
 })
 
 export const images = sqliteTable('images', {
