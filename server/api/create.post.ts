@@ -7,10 +7,18 @@ export default defineEventHandler(async (event) => {
   }).safeParse)
   const { close } = useSSE(event)
 
-  await designComponentNew(event)
-  await buildComponentGeneration(event)
-  await generateComponentNew(event)
-  await storeComponent(event, id)
-
-  close()
+  try {
+    await designComponentNew(event)
+    await buildComponentGeneration(event)
+    await generateComponentNew(event)
+    await storeComponent(event, id)
+    close()
+  }
+  catch (err) {
+    if (err instanceof Error) {
+      console.log('error caught ', err.message)
+      event.node.res.write(`[Error]: ${err.message}`)
+    }
+    close()
+  }
 })

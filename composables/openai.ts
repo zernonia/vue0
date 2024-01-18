@@ -58,6 +58,9 @@ export function usePrompt() {
         }
 
         const chunk = decoder.decode(value, { stream: true })
+        if (chunk.includes('[Error]:'))
+          throw new Error(chunk.split('[Error]:')[1])
+
         content.value += chunk
         fetchStream.trigger(content.value)
         return read()
@@ -66,6 +69,7 @@ export function usePrompt() {
     }
     catch (err) {
       console.log(err)
+      loading.value = false
       if (err instanceof Error)
         fetchError.trigger(err.message)
     }

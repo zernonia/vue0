@@ -44,15 +44,15 @@ export default async (event: H3Event<EventHandlerRequest>, component: DBComponen
     },
   ]
 
-  const stream = await useOpenAI(event).chat.completions.create({
+  const stream = useOpenAI(event).beta.chat.completions.stream({
     model: 'gpt-4-1106-preview', // 'gpt-3.5-turbo-1106',
     messages: context,
     tools: [
       {
         type: 'function',
         function: {
-          name: `design_updated_component_api`,
-          description: `generate the required design details to updated the provided component`,
+          name: `design_new_component_api`,
+          description: `generate the required design details to create a new component`,
           parameters: zodToJsonSchema(functionSchema),
         },
       },
@@ -61,11 +61,12 @@ export default async (event: H3Event<EventHandlerRequest>, component: DBComponen
   })
 
   let completion = ''
-  for await (const part of stream) {
+  stream.on('chunk', (part) => {
     const chunk = part.choices[0]?.delta?.tool_calls?.[0]?.function?.arguments || ''
     completion += chunk
     event.node.res.write(chunk)
-  }
+  })
+  await stream.done()
 
   try {
     const parsed = JSON.parse(completion) as z.infer<typeof functionSchema>

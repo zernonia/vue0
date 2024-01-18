@@ -23,7 +23,7 @@ watch(data, (n) => {
 }, { immediate: true })
 
 const prompt = ref('')
-const { loading, contentCode, onDone, onStream, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
+const { loading, contentCode, onDone, onStream, onError, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
 
 const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value ?? '')
 
@@ -54,6 +54,13 @@ async function handleSubmit() {
 }
 
 onStream(sendDataToIframe)
+onError((err) => {
+  toast({
+    title: 'Error',
+    description: err,
+    variant: 'destructive',
+  })
+})
 
 onDone(() => {
   refresh()
@@ -267,12 +274,12 @@ defineOgImageComponent('Generated', {
               </UiDropdownMenuContent>
             </UiDropdownMenu>
 
-            <UiButton class="px-1.5 md:px-4" :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? ''); umTrackEvent('copy-code', { slug }) ">
+            <UiButton class="px-1.5 md:px-4" :disabled="loading && !sfcString" variant="outline" @click="copy(selectedVersion?.code ?? ''); umTrackEvent('copy-code', { slug }) ">
               <ClipboardCheck v-if="copied" class="py-1 md:mr-1 md:-ml-1" />
               <Clipboard v-else class="py-1 md:mr-1 md:-ml-1" />
               <span class="hidden md:inline">{{ copied ? 'Copied' : 'Copy' }}</span>
             </UiButton>
-            <UiButton class="px-1.5 md:px-4" :loading="!sfcString" @click="isPreviewing = !isPreviewing">
+            <UiButton class="px-1.5 md:px-4" :loading="loading && !sfcString" @click="isPreviewing = !isPreviewing">
               <MousePointerSquare v-if="isPreviewing" class="py-1 md:mr-1 md:-ml-1" />
               <Code2Icon v-else class="py-1 md:mr-1 md:-ml-1" />
               <span class="hidden md:inline">{{ isPreviewing ? 'Preview' : 'Code' }}</span>

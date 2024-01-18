@@ -57,18 +57,21 @@ export default async (event: H3Event<EventHandlerRequest>, component: DBComponen
   const contextPromptToken = encoder.encode(context.map(i => i.content).join('')).length
   console.log(`> total context prompt tokens (estimate) : ${contextPromptToken}`)
 
-  const stream = await useOpenAI(event).chat.completions.create({
+  const stream = useOpenAI(event).beta.chat.completions.stream({
     model: 'gpt-4-1106-preview',
     messages: context,
     stream: true,
   })
 
   let completion = ''
-  for await (const part of stream) {
+  stream.on('chunk', (part) => {
     const chunk = part.choices[0].delta.content || ''
     completion += chunk
     event.node.res.write(chunk)
-  }
+  })
+  await stream.done()
+  const totalUsage = await stream.totalUsage()
+  console.log(`> total usage: ${totalUsage.total_tokens}`)
 
   event.node.req.componentGeneratedCode = completion.replace('```vue', '').replaceAll('```', '')
 }

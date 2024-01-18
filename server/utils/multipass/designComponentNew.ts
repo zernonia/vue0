@@ -58,7 +58,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
     },
   ]
 
-  const stream = await useOpenAI(event).chat.completions.create({
+  const stream = useOpenAI(event).beta.chat.completions.stream({
     model: 'gpt-4-1106-preview', // 'gpt-3.5-turbo-1106',
     messages: context,
     tools: [
@@ -75,11 +75,12 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   })
 
   let completion = ''
-  for await (const part of stream) {
+  stream.on('chunk', (part) => {
     const chunk = part.choices[0]?.delta?.tool_calls?.[0]?.function?.arguments || ''
     completion += chunk
     event.node.res.write(chunk)
-  }
+  })
+  await stream.done()
 
   try {
     const parsed = JSON.parse(completion) as z.infer<typeof functionSchema>
