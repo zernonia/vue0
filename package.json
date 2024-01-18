@@ -25,6 +25,7 @@
     "better-sqlite3": "^9.2.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^3.2.0",
     "dom-serializer": "^2.0.0",
     "domhandler": "^5.0.3",
     "drizzle-orm": "^0.29.2",

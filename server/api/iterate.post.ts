@@ -1,17 +1,23 @@
 import { eq } from 'drizzle-orm'
+import { alias } from 'drizzle-orm/sqlite-core'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { id, basedOnResultId } = await validateBody(event, z.object({
+  const { id } = await validateBody(event, z.object({
     id: z.string(),
     prompt: z.string(),
-    basedOnResultId: z.string(),
   }).safeParse)
   const { components } = tables
-  const result = await useDB().select().from(components).where(eq(components.id, basedOnResultId))
-  const previousResult = result?.[0]
 
-  if (!previousResult.code)
+  const componentAlias = alias(components, 'baseComponent')
+  const result = await useDB().select()
+    .from(components)
+    .leftJoin(componentAlias, eq(components.basedOnId, componentAlias.id))
+    .where(eq(components.id, id))
+
+  const previousResult = result?.[0].baseComponent
+
+  if (!previousResult?.code)
     return createError('Previous code not found')
 
   const { close } = useSSE(event)

@@ -17,13 +17,14 @@ export function usePrompt() {
   const content = ref('')
   const contentCode = computed(() => content.value.split('\`\`\`vue')?.[1]?.replace('\`\`\`', '') ?? '')
 
-  function handleInit(prompt: string, slug?: string | null) {
+  function handleInit(prompt: string, slug?: string | null, basedOnResultId?: string) {
     loading.value = true
     return $fetch<DBComponent>('/api/init', {
       method: 'POST',
       body: {
         prompt,
         slug,
+        basedOnResultId,
       },
       headers: {
         'x-openai-key': openaiKey.value,

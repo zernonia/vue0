@@ -5,16 +5,18 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, z.object({
     slug: z.string().optional(),
     prompt: z.string(),
+    basedOnResultId: z.string().optional(),
   }).safeParse)
   const user = await validateUser(event)
 
   if (result.success) {
-    const { slug, prompt } = result.data
+    const { slug, prompt, basedOnResultId } = result.data
 
     return useDB().insert(tables.components).values({
       slug,
       description: prompt,
       userId: user.id,
+      basedOnId: basedOnResultId,
     }).returning().get()
   }
   else {

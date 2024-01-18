@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { AlertTriangle, Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
+import { AlertTriangle, Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, IterationCw, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
+import { differenceInMinutes } from 'date-fns'
 import { useToast } from '~/components/ui/toast'
 
 const route = useRoute()
@@ -26,6 +27,16 @@ const prompt = ref('')
 const { loading, contentCode, onDone, onStream, onError, isNewPrompt, handleInit, handleIterate, handleCreate } = usePrompt()
 
 const sfcString = computed(() => selectedVersion.value?.code ?? contentCode.value ?? '')
+const isGenerationStucked = computed(() => {
+  if (selectedVersion.value?.completed || loading.value)
+    return false
+  if (selectedVersion.value?.error)
+    return true
+  return differenceInMinutes(
+    new Date(),
+    new Date(selectedVersion.value!.createdAt!),
+  ) > 5 // if stuck more than 5 minutes show regenerate button
+})
 
 function sendDataToIframe(data: IframeData) {
   const channel = new MessageChannel()
@@ -38,18 +49,30 @@ function handleChangeVersion(version: DBComponent) {
   sendDataToIframe({ code: version.code!, error: version.error })
 }
 
+function handleRegenerate() {
+  if (!selectedVersion.value)
+    return
+
+  const payload = {
+    id: selectedVersion.value.id,
+    prompt: selectedVersion.value.description,
+  }
+  if (selectedVersion.value === data.value?.at(-1))
+    handleCreate(payload)
+  else handleIterate(payload)
+}
+
 async function handleSubmit() {
   if (!prompt.value)
     return
   umTrackEvent('iterate-generation', { slug: slug.value })
   const basedOnResultId = selectedVersion.value?.id
-  const result = await handleInit(prompt.value, selectedVersion.value?.slug)
+  const result = await handleInit(prompt.value, selectedVersion.value?.slug, basedOnResultId)
 
   data.value = [result, ...(data.value ?? [])]
   handleIterate({
     id: result.id,
     prompt: result.description,
-    basedOnResultId,
   })
 }
 
@@ -170,7 +193,7 @@ defineOgImageComponent('Generated', {
             v-for="(version, index) in data"
             :key="version.id"
           >
-            <UiTooltip :delay-duration="100">
+            <UiTooltip :delay-duration="500">
               <UiTooltipTrigger as-child>
                 <UiButton
                   class="justify-start h-auto min-w-[6rem] min-h-6 p-1 overflow-hidden text-left text-gray-400 rounded-lg outline-1 hover:text-primary relative "
@@ -209,7 +232,7 @@ defineOgImageComponent('Generated', {
           </div>
 
           <div class="flex items-center gap-2">
-            <UiTooltip v-if="selectedVersion?.error" :default-open="true">
+            <UiTooltip v-if="selectedVersion?.error">
               <UiTooltipTrigger class="text-destructive mr-2">
                 <AlertTriangle class="p-0.5" />
               </UiTooltipTrigger>
@@ -221,14 +244,14 @@ defineOgImageComponent('Generated', {
               <UiDropdownMenuTrigger as-child>
                 <UiButton
                   size="icon"
-                  :disabled="!sfcString" variant="outline"
+                  variant="outline"
                 >
                   <MoreVertical class="p-1" />
                 </UiButton>
               </UiDropdownMenuTrigger>
 
               <UiDropdownMenuContent align="end">
-                <UiDropdownMenuItem @click="handleFork">
+                <UiDropdownMenuItem :disabled="!sfcString" @click="handleFork">
                   <GitBranch class="py-1 mr-1" />
                   <span>Fork</span>
                 </UiDropdownMenuItem>
@@ -284,16 +307,22 @@ defineOgImageComponent('Generated', {
               </UiDropdownMenuContent>
             </UiDropdownMenu>
 
-            <UiButton class="px-1.5 md:px-4" :disabled="loading && !sfcString" variant="outline" @click="copy(selectedVersion?.code ?? ''); umTrackEvent('copy-code', { slug }) ">
-              <ClipboardCheck v-if="copied" class="py-1 md:mr-1 md:-ml-1" />
-              <Clipboard v-else class="py-1 md:mr-1 md:-ml-1" />
-              <span class="hidden md:inline">{{ copied ? 'Copied' : 'Copy' }}</span>
+            <UiButton v-if="isGenerationStucked && isUserCreator" class="px-1.5 md:px-4" :disabled="loading && !sfcString" variant="outline" @click="handleRegenerate(); umTrackEvent('regenerate-code', { id: selectedVersion?.id! }) ">
+              <IterationCw class="py-1 md:mr-1 md:-ml-1" />
+              <span class="hidden md:inline">Regenerate</span>
             </UiButton>
-            <UiButton class="px-1.5 md:px-4" :loading="loading && !sfcString" @click="isPreviewing = !isPreviewing">
-              <MousePointerSquare v-if="isPreviewing" class="py-1 md:mr-1 md:-ml-1" />
-              <Code2Icon v-else class="py-1 md:mr-1 md:-ml-1" />
-              <span class="hidden md:inline">{{ isPreviewing ? 'Preview' : 'Code' }}</span>
-            </UiButton>
+            <template v-else>
+              <UiButton class="px-1.5 md:px-4" :loading="loading && !sfcString" :disabled="!sfcString" variant="outline" @click="copy(selectedVersion?.code ?? ''); umTrackEvent('copy-code', { slug }) ">
+                <ClipboardCheck v-if="copied" class="py-1 md:mr-1 md:-ml-1" />
+                <Clipboard v-else class="py-1 md:mr-1 md:-ml-1" />
+                <span class="hidden md:inline">{{ copied ? 'Copied' : 'Copy' }}</span>
+              </UiButton>
+              <UiButton class="px-1.5 md:px-4" :loading="loading && !sfcString" :disabled="!sfcString" @click="isPreviewing = !isPreviewing">
+                <MousePointerSquare v-if="isPreviewing" class="py-1 md:mr-1 md:-ml-1" />
+                <Code2Icon v-else class="py-1 md:mr-1 md:-ml-1" />
+                <span class="hidden md:inline">{{ isPreviewing ? 'Preview' : 'Code' }}</span>
+              </UiButton>
+            </template>
           </div>
         </div>
 
