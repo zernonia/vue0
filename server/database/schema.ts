@@ -21,6 +21,7 @@ export const components = sqliteTable('components', {
   userId: integer('user_id').references(() => users.id),
   metadata: text('metadata', { mode: 'json' }),
   completed: integer('completed', { mode: 'boolean' }),
+  error: text('error'),
 })
 
 export const images = sqliteTable('images', {
