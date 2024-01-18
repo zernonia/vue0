@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
@@ -17,6 +18,7 @@ export default defineEventHandler(async (event) => {
   catch (err) {
     if (err instanceof Error) {
       console.log('error caught ', err.message)
+      await useDB().update(tables.components).set({ id, error: err.message }).where(eq(tables.components.id, id))
       event.node.res.write(`[Error]: ${err.message}`)
     }
     close()

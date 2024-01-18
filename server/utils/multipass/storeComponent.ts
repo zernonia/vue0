@@ -18,6 +18,7 @@ export default async (event: H3Event<EventHandlerRequest>, id: string, slug?: st
     description: componentDesignTask.description.user,
     metadata: componentDesignTask,
     completed: true,
+    error: null,
   }).where(eq(tables.components.id, id)).returning().get()
 
   await screenshot(result.id)
