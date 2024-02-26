@@ -15,34 +15,38 @@ export default async (event: H3Event<EventHandlerRequest>) => {
 
   const retrievedComponent = components.filter(i => componentDesignTask.components.find(j => j.name === i.name))
 
+  const getRandomExample = (componentExamples: any[]) => {
+    const randomIndex = Math.floor(Math.random() * componentExamples.length);
+    const [randomExample] = componentExamples.splice(randomIndex, 1);
+    return randomExample;
+  }
+
+  const logTokens = (componentName: string, totalTokens: number, TOKEN_LIMIT: number) => {
+    console.log(`tokens for context entry ${componentName} : ${totalTokens} (limit : ${TOKEN_LIMIT})`);
+  }
+
   const encoder = encoding()
   const mappedComponent = retrievedComponent.map((component) => {
-    const componentExamples = [...component.examples]
-    const examples: typeof componentExamples = []
-    let totalTokens = 0
-
+    const componentExamples = [...component.examples];
+    const examples: typeof componentExamples = [];
+    let totalTokens = 0;
+  
     while (totalTokens < TOKEN_LIMIT && componentExamples.length) {
-      const randomExample = componentExamples.splice(
-        Math.floor(Math.random() * componentExamples.length),
-        1,
-      )[0]
-
-      totalTokens += encoder.encode(randomExample.code).length
-
-      if (totalTokens < TOKEN_LIMIT)
-        examples.push(randomExample)
-
-      console.log(
-          `tokens for context entry ${component.name} : ${totalTokens} `
-          + `(limit : ${TOKEN_LIMIT})`,
-      )
+      const randomExample = getRandomExample(componentExamples);
+      totalTokens += encoder.encode(randomExample.code).length;
+  
+      if (totalTokens < TOKEN_LIMIT) {
+        examples.push(randomExample);
+      }
+  
+      logTokens(component.name, totalTokens, TOKEN_LIMIT);
     }
-
+  
     return {
       ...component,
       examples,
-    }
-  })
+    };
+  });
 
   const componentContext = mappedComponent.map((component, idx) => {
     const examplesBlock = !component.examples.length
