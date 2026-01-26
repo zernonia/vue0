@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  future: {
+    compatibilityVersion: 4,
+  },
   // devtools totally broken, not sure why
   devtools: { enabled: false },
   app: {
@@ -25,7 +28,7 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@nuxtjs/tailwindcss',
+    '@nuxthub/core',
     '@vueuse/nuxt',
     'shadcn-nuxt',
     '@nuxtjs/google-fonts',
@@ -33,6 +36,12 @@ export default defineNuxtConfig({
     '@nuxtseo/module',
     '@nuxt/content',
   ],
+  hub: {
+    database: true,
+    kv: true,
+    blob: true,
+  },
+  css: ['~/assets/css/main.css'],
   extends: ['nuxt-umami'],
   appConfig: {
     umami: {
@@ -43,8 +52,15 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: 'Ui',
   },
-  tailwindcss: {
-    viewer: false,
+  vite: {
+    css: {
+      transformer: 'lightningcss',
+    },
+  },
+  postcss: {
+    plugins: {
+      '@tailwindcss/postcss': {},
+    },
   },
   ogImage: {
     debug: true,
