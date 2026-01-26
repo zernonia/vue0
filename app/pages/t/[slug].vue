@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { upperFirst } from 'scule'
-import { AlertTriangle, Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, IterationCw, MoreVertical, MousePointerSquare, Share, Trash, Trash2 } from 'lucide-vue-next'
+import { AlertTriangle, Clipboard, ClipboardCheck, Clock, Code2Icon, GitBranch, IterationCw, MoreVertical, MousePointerSquare, Share, Trash, Trash2, Upload } from 'lucide-vue-next'
 import { differenceInMinutes } from 'date-fns'
 import { useToast } from '~/components/ui/toast'
 
@@ -167,6 +167,17 @@ async function handleDelete(all = false) {
 
 const componentDescription = computed(() => upperFirst(data.value?.at(-1)?.description ?? ''))
 
+// Marketplace submission
+const showSubmitDialog = ref(false)
+
+function handleSubmitSuccess(result: any) {
+  toast({
+    title: 'Component Submitted!',
+    description: 'Your component has been submitted for review.',
+  })
+  umTrackEvent('submit-to-marketplace', { componentId: selectedVersion.value?.id })
+}
+
 // Page meta section
 useHead({
   title() {
@@ -261,6 +272,16 @@ defineOgImageComponent('Generated', {
                 </UiDropdownMenuItem>
 
                 <template v-if="isUserCreator">
+                  <UiDropdownMenuItem
+                    :disabled="!selectedVersion?.completed || !selectedVersion?.code || !!selectedVersion?.marketplaceId"
+                    @click="showSubmitDialog = true"
+                  >
+                    <Upload class="py-1 mr-1" />
+                    <span>Submit to Marketplace</span>
+                  </UiDropdownMenuItem>
+                </template>
+
+                <template v-if="isUserCreator">
                   <UiDropdownMenuSeparator />
                   <DialogDelete
                     v-if="selectedVersion?.id !== data?.at(-1)?.id"
@@ -336,5 +357,14 @@ defineOgImageComponent('Generated', {
     <div v-if="isUserCreator && !selectedVersion?.error" class="relative flex items-center justify-center w-full gap-2 mt-3 md:mt-16">
       <PromptInput v-model="prompt" :loading="loading" class="md:absolute bottom-0 w-full md:w-fit md:-translate-x-1/2 left-1/2" placeholder="Make the padding larger" @submit="handleSubmit" />
     </div>
+
+    <!-- Submit to Marketplace Dialog -->
+    <MarketplaceSubmitDialog
+      v-if="selectedVersion"
+      v-model:open="showSubmitDialog"
+      :component-id="selectedVersion.id"
+      :component-title="componentDescription"
+      @success="handleSubmitSuccess"
+    />
   </div>
 </template>
