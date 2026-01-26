@@ -1,5 +1,4 @@
 import { asc } from 'drizzle-orm'
-import { categories } from '~/server/database/schema'
 
 /**
  * Get all marketplace categories
@@ -10,8 +9,8 @@ export default defineEventHandler(async () => {
   try {
     const allCategories = await db
       .select()
-      .from(categories)
-      .orderBy(asc(categories.order))
+      .from(tables.categories)
+      .orderBy(asc(tables.categories.order))
 
     return {
       success: true,

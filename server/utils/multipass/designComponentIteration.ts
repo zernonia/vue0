@@ -7,7 +7,7 @@ export default async (event: H3Event<EventHandlerRequest>, component: DBComponen
   console.log('> init : design component iteration')
   const { prompt } = await readBody(event)
 
-  const components = (await import('@/template/shadcn-vue/metadata.json')).default
+  const components = (await import('../../../template/shadcn-vue/metadata.json')).default
   const functionSchema = z.object({
     new_component_description: z.string().describe(`Write a description for Vue component design task based on the user query. Stick strictly to what the user wants in their request - do not go off track`),
     use_library_components: z.array(z.object({

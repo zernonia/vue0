@@ -11,7 +11,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   console.log('> init : building component generation')
   const TOKEN_LIMIT = 600
   const componentDesignTask = event.node.req.componentDesignTask
-  const components = (await import('@/template/shadcn-vue/metadata.json')).default
+  const components = (await import('../../../template/shadcn-vue/metadata.json')).default
 
   const retrievedComponent = components.filter(i => componentDesignTask.components.find(j => j.name === i.name))
 

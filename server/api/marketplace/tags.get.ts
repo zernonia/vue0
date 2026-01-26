@@ -1,5 +1,4 @@
 import { asc } from 'drizzle-orm'
-import { tags } from '~/server/database/schema'
 
 /**
  * Get all marketplace tags
@@ -10,8 +9,8 @@ export default defineEventHandler(async () => {
   try {
     const allTags = await db
       .select()
-      .from(tags)
-      .orderBy(asc(tags.type), asc(tags.name))
+      .from(tables.tags)
+      .orderBy(asc(tables.tags.type), asc(tables.tags.name))
 
     // Group by type for easier consumption
     const grouped = allTags.reduce((acc, tag) => {

@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/d1'
-import * as schema from '~/server/database/schema'
+import * as schema from '../database/schema'
 
-export * as tables from '~/server/database/schema'
+export * as tables from '../database/schema'
 
 // Type exports for convenience
 export type DBComponent = typeof schema.components.$inferSelect & {

@@ -1,6 +1,5 @@
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { validateBody, validateUser } from '~/server/utils/validateBody'
 
 export default defineEventHandler(async (event) => {
   const { id, slug } = await validateBody(event, z.object({

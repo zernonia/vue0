@@ -52,14 +52,16 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: 'Ui',
   },
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+      ignore: ['**/ui/**/index.ts'], // Ignore shadcn index.ts files to prevent duplicate warnings
+    },
+  ],
   vite: {
     css: {
       transformer: 'lightningcss',
-    },
-  },
-  postcss: {
-    plugins: {
-      '@tailwindcss/postcss': {},
     },
   },
   ogImage: {

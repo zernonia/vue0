@@ -1,5 +1,4 @@
 import { eq, desc } from 'drizzle-orm'
-import { submissions, marketplaceComponents, users } from '~/server/database/schema'
 
 /**
  * Get user's marketplace submissions
@@ -20,15 +19,15 @@ export default defineEventHandler(async (event) => {
     // Fetch user's submissions with component details
     const userSubmissions = await db
       .select({
-        submission: submissions,
-        component: marketplaceComponents,
-        author: users,
+        submission: tables.submissions,
+        component: tables.marketplaceComponents,
+        author: tables.users,
       })
-      .from(submissions)
-      .leftJoin(marketplaceComponents, eq(submissions.componentId, marketplaceComponents.id))
-      .leftJoin(users, eq(marketplaceComponents.authorId, users.id))
-      .where(eq(submissions.userId, session.user.id))
-      .orderBy(desc(submissions.submittedAt))
+      .from(tables.submissions)
+      .leftJoin(tables.marketplaceComponents, eq(tables.submissions.componentId, tables.marketplaceComponents.id))
+      .leftJoin(tables.users, eq(tables.marketplaceComponents.authorId, tables.users.id))
+      .where(eq(tables.submissions.userId, session.user.id))
+      .orderBy(desc(tables.submissions.submittedAt))
 
     return {
       success: true,

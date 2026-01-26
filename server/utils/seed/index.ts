@@ -27,4 +27,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   seedAll()
 }
 
-export { seedCategories, seedTags, seedAll }
+export { seedAll }

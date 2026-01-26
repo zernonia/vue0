@@ -1,8 +1,5 @@
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { validateComponent } from '~/server/utils/validation/componentValidator'
-import { extractDesignTokens } from '~/server/utils/tokens/extractDesignTokens'
-import { marketplaceComponents, submissions, components, componentTags } from '~/server/database/schema'
 
 /**
  * Submit a component to the marketplace
@@ -48,8 +45,8 @@ export default defineEventHandler(async (event) => {
     // 1. Verify the component exists and belongs to the user
     const component = await db
       .select()
-      .from(components)
-      .where(eq(components.id, data.componentId))
+      .from(tables.components)
+      .where(eq(tables.components.id, data.componentId))
       .get()
 
     if (!component) {
@@ -95,8 +92,8 @@ export default defineEventHandler(async (event) => {
     if (component.marketplaceId) {
       const existing = await db
         .select()
-        .from(marketplaceComponents)
-        .where(eq(marketplaceComponents.id, component.marketplaceId))
+        .from(tables.marketplaceComponents)
+        .where(eq(tables.marketplaceComponents.id, component.marketplaceId))
         .get()
 
       if (existing) {
@@ -110,7 +107,7 @@ export default defineEventHandler(async (event) => {
 
     // 5. Create marketplace component entry
     const [marketplaceComponent] = await db
-      .insert(marketplaceComponents)
+      .insert(tables.marketplaceComponents)
       .values({
         title: data.title,
         description: data.description,
@@ -132,7 +129,7 @@ export default defineEventHandler(async (event) => {
 
     // 6. Create submission entry for moderation workflow
     const [submission] = await db
-      .insert(submissions)
+      .insert(tables.submissions)
       .values({
         componentId: marketplaceComponent.id,
         userId: session.user.id,
@@ -142,13 +139,13 @@ export default defineEventHandler(async (event) => {
 
     // 7. Link marketplace component to original component
     await db
-      .update(components)
+      .update(tables.components)
       .set({ marketplaceId: marketplaceComponent.id })
-      .where(eq(components.id, component.id))
+      .where(eq(tables.components.id, component.id))
 
     // 8. Associate tags
     for (const tagId of data.tags) {
-      await db.insert(componentTags).values({
+      await db.insert(tables.componentTags).values({
         componentId: marketplaceComponent.id,
         tagId,
       })
@@ -156,9 +153,9 @@ export default defineEventHandler(async (event) => {
 
     // 9. Update component design tokens
     await db
-      .update(components)
+      .update(tables.components)
       .set({ designTokens })
-      .where(eq(components.id, component.id))
+      .where(eq(tables.components.id, component.id))
 
     return {
       success: true,
