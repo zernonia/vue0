@@ -63,6 +63,14 @@ export default defineNuxtConfig({
     css: {
       transformer: 'lightningcss',
     },
+    optimizeDeps: {
+      exclude: ['consolidate'],
+    },
+    ssr: {
+      // Don't externalize these - just don't try to load them
+      noExternal: [],
+      external: ['consolidate'],
+    },
   },
   ogImage: {
     debug: true,
@@ -85,6 +93,10 @@ export default defineNuxtConfig({
         maxDuration: 300, // 5mins maximum possible for Vercel Pro
       },
     },
+    moduleSideEffects: [
+      // Prevent consolidate from being traced
+      (id: string) => !id.includes('consolidate'),
+    ],
   },
   googleFonts: {
     families: {
