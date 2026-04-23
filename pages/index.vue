@@ -15,7 +15,7 @@ useSeoMeta({
       <Logo />
     </div>
     <h1 class="text-center text-2xl font-black md:text-4xl">
-      New vue0 is coming soon
+      Revamping vue0!
     </h1>
   </div>
 </template>

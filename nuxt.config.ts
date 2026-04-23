@@ -29,11 +29,11 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'shadcn-nuxt',
     '@nuxtjs/google-fonts',
-    'nuxt-auth-utils',
-    '@nuxtseo/module',
-    '@nuxt/content',
+    // 'nuxt-auth-utils',
+    // '@nuxtseo/module',
+    // '@nuxt/content',
   ],
-  extends: ['nuxt-umami'],
+  // extends: ['nuxt-umami'],
   appConfig: {
     umami: {
       version: 2,
@@ -43,31 +43,31 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: 'Ui',
   },
-  tailwindcss: {
-    viewer: false,
-  },
-  ogImage: {
-    debug: true,
-    compatibility: {
-      prerender: {
-        chromium: false,
-      },
-    },
-  },
-  hooks: {
-    'vite:extendConfig': (config, { isClient }) => {
-      if (isClient)
-      // @ts-expect-error it has alias of vue
-        config.resolve.alias.vue = 'vue/dist/vue.esm-bundler.js'
-    },
-  },
-  nitro: {
-    vercel: {
-      functions: {
-        maxDuration: 300, // 5mins maximum possible for Vercel Pro
-      },
-    },
-  },
+  // tailwindcss: {
+  //   viewer: false,
+  // },
+  // ogImage: {
+  //   debug: true,
+  //   compatibility: {
+  //     prerender: {
+  //       chromium: false,
+  //     },
+  //   },
+  // },
+  // hooks: {
+  //   'vite:extendConfig': (config, { isClient }) => {
+  //     if (isClient)
+  //     // @ts-expect-error it has alias of vue
+  //       config.resolve.alias.vue = 'vue/dist/vue.esm-bundler.js'
+  //   },
+  // },
+  // nitro: {
+  //   vercel: {
+  //     functions: {
+  //       maxDuration: 300, // 5mins maximum possible for Vercel Pro
+  //     },
+  //   },
+  // },
   googleFonts: {
     families: {
       Inter: '400..800',

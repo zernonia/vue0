@@ -1,1 +1,0 @@
-ALTER TABLE `components` DROP COLUMN `user_id`;
